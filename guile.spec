@@ -71,7 +71,7 @@ make -C libguile scmconfig.h
 # Ouch! guile forgets to set it's onw shard lib path to use shared uninstalled
 # apps. It ain't pretty, but it works.
 LD_LIBRARY_PATH="`pwd`/libguile/.libs:`pwd`/qt/.libs:`pwd`/libguile-ltdl/.libs" \
-	make LDFLAGS="-L`pwd`/libguile/.libs" %{?_smp_mflags}
+	make LDFLAGS="-L`pwd`/libguile/.libs"
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
@@ -174,6 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 - Moved static guilereadline and guile-srfi-srfi libs to devel package (#140893)
 - Fixed guile-tools not finding guile lib dir (#142642)
 - Added some nice tools (#142642)
+- Removed smp build, seems to be broken atm
 
 * Wed Dec  8 2004 Jindrich Novy <jnovy@redhat.com> 5:1.6.4-15
 - remove dependency to umb-scheme and replace it by slib
