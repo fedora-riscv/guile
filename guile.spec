@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 14
+Release: 15
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.6.0-libtool.patch
 Patch2: guile-1.4.1-rpath.patch
@@ -17,7 +17,7 @@ Buildroot: %{_tmppath}/%{name}-root
 BuildPrereq: libtool
 Prereq: /sbin/install-info
 Prereq: readline
-Prereq: umb-scheme >= 3.2-21
+Prereq: slib >= 3a1-1
 Epoch: 5
 
 %description
@@ -89,8 +89,8 @@ find $RPM_BUILD_ROOT -name '*.la' | \
 
 chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
-ln -s ../../share/umb-scheme/slib ${RPM_BUILD_ROOT}%{_datadir}/guile/slib
-ln -s ../../share/umb-scheme/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
+ln -s ../../share/slib ${RPM_BUILD_ROOT}%{_datadir}/guile/slib
+ln -s ../../share/slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
 
 # Remove unpackaged files
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-doc-snarf
@@ -160,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Wed Dec  8 2004 Jindrich Novy <jnovy@redhat.com> 5:1.6.4-15
+- remove dependency to umb-scheme and replace it by slib
+
 * Tue Oct 12 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-14
 - Fix multilib support for guile
 
