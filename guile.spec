@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 9
+Release: 12
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
 Copyright: GPL
@@ -22,7 +22,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
 Group: Development/Libraries
-Requires: guile
+Requires: guile = %{PACKAGE_VERSION}
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
@@ -39,7 +39,11 @@ install the guile package.
 
 %build
 LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
+%ifarch ia64
+CFLAGS="-O0" %configure --enable-dynamic-linking
+%else
 %configure --enable-dynamic-linking
+%endif
 make
 
 %install
@@ -76,7 +80,8 @@ fi
 %doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS README TODO
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
-%{_libdir}/lib*.so.*.*
+%{_libdir}/libguilereadline*
+%{_libdir}/libguile.so.*
 %dir %{_datadir}/guile
 %dir %{_datadir}/guile/site
 %dir %{_datadir}/guile/%{PACKAGE_VERSION}
@@ -89,14 +94,25 @@ fi
 %defattr(-,root,root)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
-%{_libdir}/lib*so
-%{_libdir}/lib*a
+%{_libdir}/libguile.so
+%{_libdir}/libguile.a
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
 %{_infodir}/data-rep*
 
 %changelog
+* Wed Feb 28 2001 Philipp Knirsch <pknirsch@redhat.de>
+- Fixed missing devel version dependancy.
+- Fixed bug #20134 for good this time.
+
+* Mon Jan 22 2001 Than Ngo <than@redhat.com>
+- disable optimization on ia64 (compiler bug) (bug #23186)
+
+* Tue Dec 12 2000 Philipp Knirsch <Philipp.Knirsch@redhat.de>
+- Fixed %files bug #20134 where the /usr/lib/libguilereadline.so didn't get
+  installed for the non devel version.
+
 * Fri Jul 14 2000 Nalin Dahyabhai <nalin@redhat.com>
 - Add version number to prereq for umb-scheme to get the post-install to
   work properly.
