@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 19
+Release: 19a
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile
 Patch: guile-1.3.4-inet_aton.patch
@@ -41,7 +41,7 @@ install the guile package.
 %patch1 -p1 -b .sizet
 
 %build
-%ifarch ia64 alpha
+%ifarch ia64 alpha s390 s390x
 %ifarch ia64
 libtoolize --copy --force
 export CFLAGS="-O0"
@@ -87,7 +87,7 @@ fi
 %{_bindir}/guile
 %{_libdir}/libguilereadline*
 %{_libdir}/libguile.so.*
-%ifnarch ia64 alpha
+%ifnarch ia64 alpha s390 s390x
 %{_libdir}/libqthreads.so.*
 %endif
 %dir %{_datadir}/guile
@@ -102,7 +102,7 @@ fi
 %defattr(-,root,root)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
-%ifnarch ia64 alpha
+%ifnarch ia64 alpha s390 s390x
 %{_libdir}/libqthreads.so
 %endif
 %{_libdir}/libguile.so
