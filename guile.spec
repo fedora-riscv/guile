@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 1
+Release: 2
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch2: guile-1.6.7-rpath.patch
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Mar 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-2
+- bump release and rebuild with gcc 4
+
 * Wed Feb 09 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-1
 - Update to guile-1.6.7
 - Dropped ia64 patch, stuff looks fixed in upstream code
