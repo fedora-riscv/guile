@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.4
-Release: 7
+Release: 8
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
@@ -41,7 +41,7 @@ install the guile package.
 
 %build
 #LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
-%ifarch ia64 alpha s390 s390x
+%ifarch ia64 alpha s390 s390x ppc
 CFLAGS="-O0" %configure
 %else
 %configure --with-threads
@@ -82,7 +82,7 @@ fi
 %{_bindir}/guile
 %{_libdir}/libguilereadline.so*
 %{_libdir}/libguile.so.*
-%ifnarch ia64 alpha s390 s390x
+%ifnarch ia64 alpha s390 s390x ppc
 %{_libdir}/libqthreads.so.*
 %endif
 %dir %{_datadir}/guile
@@ -102,7 +102,7 @@ fi
 %{_libdir}/libguile.la
 %{_libdir}/libguilereadline.a
 %{_libdir}/libguilereadline.la
-%ifnarch ia64 alpha s390 s390x
+%ifnarch ia64 alpha s390 s390x ppc
 %{_libdir}/libqthreads.so
 %{_libdir}/libqthreads.a
 %{_libdir}/libqthreads.la
@@ -113,6 +113,9 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Wed Jul 17 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-8
+- Remove qthread from ppc as well.
+
 * Wed Jul 10 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-7
 - Fixed some more %file lib related errors ().
 
