@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 18
+Release: 19
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile
 Patch: guile-1.3.4-inet_aton.patch
@@ -102,6 +102,9 @@ fi
 %defattr(-,root,root)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
+%ifnarch ia64 alpha
+%{_libdir}/libqthreads.so
+%endif
 %{_libdir}/libguile.so
 %{_libdir}/libguile.a
 %{_includedir}/guile
@@ -110,6 +113,9 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Wed Apr 03 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-19/3
+- Added missing libqthreads.so for devel package.
+
 * Tue Mar 26 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-18/3
 - Removed --with-threads on all but i386 as it doesn't work.
 - Added URL tag (#61582)
