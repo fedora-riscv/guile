@@ -1,9 +1,10 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 12
+Release: 12a
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
+Patch1: guile-1.3.4-sizet.patch
 Copyright: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -36,6 +37,7 @@ install the guile package.
 %prep
 %setup -q
 %patch -p1 -b .inet_aton
+%patch1 -p1 -b .sizet
 
 %build
 LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
@@ -43,6 +45,9 @@ LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
 CFLAGS="-O0" %configure --enable-dynamic-linking
 %else
 %configure --enable-dynamic-linking
+%endif
+%ifarch s390x
+echo "#undef SCM_STACK_GROWS_UP" >> libguile/scmconfig.h
 %endif
 make
 
@@ -102,6 +107,13 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Mon May 29 2001 Oliver Paukstadt <oliver.paukstadt@millenux.com>
+- work around for problem with optimiziaton higher than 2
+  SCM_STACK_GROWS_UP ist not set correct with -O3
+
+* Fri May  4 2001 Oliver Paukstadt <oliver.paukstadt@millenux.com>
+- ported to IBM zSeries (s390x, 64 bit)
+
 * Wed Feb 28 2001 Philipp Knirsch <pknirsch@redhat.de>
 - Fixed missing devel version dependancy.
 - Fixed bug #20134 for good this time.
