@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 13
+Release: 14
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.6.0-libtool.patch
 Patch2: guile-1.4.1-rpath.patch
@@ -62,6 +62,9 @@ WITH_THREADS=
 export CFLAGS="$RPM_OPT_FLAGS -O0"
 %endif
 %configure $WITH_THREADS
+
+# Multilib fix for procedures.txt
+perl -pi -e 's|threads.doc||' `find . -name Makefile`
 
 make -C libguile scmconfig.h
 # Ouch! guile forgets to set it's onw shard lib path to use shared uninstalled
@@ -157,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Tue Oct 12 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-14
+- Fix multilib support for guile
+
 * Tue Aug 03 2004 Phil Knirsch <pknirsch@redhat.com>  5:1.6.4-13
 - Enable optimization again for s390.
 
