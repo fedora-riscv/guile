@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 16
+Release: 17
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.0-libtool.patch
@@ -114,12 +114,14 @@ bzip2 NEWS
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
 /sbin/install-info  %{_infodir}/guile.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
 /sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
 /sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
@@ -169,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Dec 23 2004 Phil Knirsch <pknirsch@redhat.com>a5:1.6.4-17
+- Fixed wrong post and postun use of /sbin/ldconfig (#143657)
+
 * Tue Dec 21 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-16
 - Moved info files to base package as they are not devel related (#139948)
 - Moved static guilereadline and guile-srfi-srfi libs to devel package (#140893)
