@@ -14,7 +14,7 @@ Patch4: guile-1.6.7-ltdl.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
-BuildPrereq: libtool
+BuildPrereq: libtool libtool-ltdl-devel
 Prereq: /sbin/install-info
 Prereq: readline
 Prereq: slib >= 3a1-1
@@ -172,6 +172,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Mar 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-2
 - bump release and rebuild with gcc 4
 - Fixed problem with ltdl and gcc 4 rebuild
+- Add BuildPreReq for libtool-ltdl-devel
 
 * Wed Feb 09 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-1
 - Update to guile-1.6.7
