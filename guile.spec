@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 12
+Release: 13
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.6.0-libtool.patch
 Patch2: guile-1.4.1-rpath.patch
@@ -58,8 +58,7 @@ WITH_THREADS=--with-threads
 WITH_THREADS=
 %endif
 
-%ifarch ia64 s390
-# alpha s390x ppc
+%ifarch ia64
 export CFLAGS="$RPM_OPT_FLAGS -O0"
 %endif
 %configure $WITH_THREADS
@@ -158,6 +157,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Tue Aug 03 2004 Phil Knirsch <pknirsch@redhat.com>  5:1.6.4-13
+- Enable optimization again for s390.
+
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
