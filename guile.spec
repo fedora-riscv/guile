@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 11
+Release: 12
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.6.0-libtool.patch
 Patch2: guile-1.4.1-rpath.patch
@@ -158,6 +158,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
 * Fri Apr 16 2004 Warren Togami <wtogami@redhat.com> 5:1.6.4-11
 - Fix post failure and duplicate rpm in database
 - Compress NEWS
