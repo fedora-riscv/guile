@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 17
+Release: 18
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.0-libtool.patch
@@ -171,7 +171,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
-* Thu Dec 23 2004 Phil Knirsch <pknirsch@redhat.com>a5:1.6.4-17
+* Wed Jan 12 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-18
+- rebuilt because of new readline
+
+* Thu Dec 23 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-17
 - Fixed wrong post and postun use of /sbin/ldconfig (#143657)
 
 * Tue Dec 21 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-16
