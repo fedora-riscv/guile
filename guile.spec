@@ -7,9 +7,10 @@ Version: 1.6.7
 Release: 2
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
-Patch2: guile-1.6.7-rpath.patch
-Patch3: guile-1.6.0-unknown_arch.patch
-Patch5: guile-1.6.0-ppc64.patch
+Patch1: guile-1.6.7-rpath.patch
+Patch2: guile-1.6.0-unknown_arch.patch
+Patch3: guile-1.6.0-ppc64.patch
+Patch4: guile-1.6.7-ltdl.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -44,9 +45,10 @@ install the guile package.
 
 %prep
 %setup -q
-%patch2 -p1 -b .rpath
-%patch3 -p1 -b .unknown_arch
-%patch5 -p1 -b .ppc64
+%patch1 -p1 -b .rpath
+%patch2 -p1 -b .unknown_arch
+%patch3 -p1 -b .ppc64
+%patch4 -p1 -b .ltdl
 
 %build
 
@@ -169,6 +171,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Mar 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-2
 - bump release and rebuild with gcc 4
+- Fixed problem with ltdl and gcc 4 rebuild
 
 * Wed Feb 09 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-1
 - Update to guile-1.6.7
