@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 14
+Release: 15
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
@@ -9,16 +9,13 @@ Copyright: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
 Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-15
-Epoch: 1
+Epoch: 2
 
 %description
-GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
-implementation of the Scheme programming language, written in C.  GUILE
-provides a machine-independent execution platform that can be linked in
-as a library during the building of extensible programs.
-
-Install the guile package if you'd like to add extensibility to programs
-that you are developing.
+GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a
+library implementation of the Scheme programming language, written in
+C. GUILE provides a machine-independent execution platform that can be
+linked in as a library during the building of extensible programs.
 
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
@@ -27,12 +24,12 @@ Requires: guile = %{PACKAGE_VERSION}
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
-that you'll need to develop applications that are linked with the
+that you will need to develop applications that are linked with the
 GUILE extensibility library.
 
 You need to install the guile-devel package if you want to develop
-applications that will be linked to GUILE.  You'll also need to
-install the guile package.
+applications that will be linked to GUILE. You also need to install
+the guile package.
 
 %prep
 %setup -q
@@ -40,7 +37,7 @@ install the guile package.
 %patch1 -p1 -b .sizet
 
 %build
-LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
+#LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
 %ifarch ia64
 CFLAGS="-O0" %configure --enable-dynamic-linking
 %else
@@ -104,6 +101,9 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Wed Aug 22 2001 Philipp Knirsch <pknirsch@redhat.de>
+- Fixed /tmp buildroot pollution (#50398)
+
 * Mon Jun 11 2001 Florian La Roche <Florian.LaRoche@redhat.de>
 - size_t patch from <oliver.paukstadt@millenux.com>
 
