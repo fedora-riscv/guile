@@ -4,15 +4,13 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 9.2.1
+Release: 11
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
-Patch1: guile-1.3.4-sizet.patch
-Patch2: guile-1.6.0-libtool.patch
-#Patch3: guile-1.6.0-libltdl.patch
-Patch4: guile-1.4.1-rpath.patch
-Patch5: guile-1.6.0-unknown_arch.patch
-Patch6: guile-1.6.0-ia64.patch
-Patch7: guile-1.6.0-ppc64.patch
+Patch1: guile-1.6.0-libtool.patch
+Patch2: guile-1.4.1-rpath.patch
+Patch3: guile-1.6.0-unknown_arch.patch
+Patch4: guile-1.6.0-ia64.patch
+Patch5: guile-1.6.0-ppc64.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -47,13 +45,11 @@ install the guile package.
 
 %prep
 %setup -q
-#%patch1 -p1 -b .sizet
-%patch2 -p1 -b .libtool
-#%patch3 -p1 -b .ltdl
-%patch4 -p1 -b .rpath
-%patch5 -p1 -b .unknown_arch
-%patch6 -p1 -b .ia64
-%patch7 -p1 -b .ppc64
+%patch1 -p1 -b .libtool
+%patch2 -p1 -b .rpath
+%patch3 -p1 -b .unknown_arch
+%patch4 -p1 -b .ia64
+%patch5 -p1 -b .ppc64
 
 %build
 
@@ -101,16 +97,29 @@ rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-snarf.awk
 rm -rf ${RPM_BUILD_ROOT}/usr/include/guile-readline
 rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
 
+# Compress large documentation
+bzip2 NEWS
+
 %clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
+%post devel
+/sbin/install-info  %{_infodir}/guile.info.gz %{_infodir}/dir
+/sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
+/sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
+
+%preun devel
+/sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
+/sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
+/sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
+
 %files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS README
+%defattr(-,root,root,-)
+%doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS.bz2 README
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
 %{_bindir}/guile-tools
@@ -129,7 +138,7 @@ rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
 %{_datadir}/guile/1.6
 
 %files devel
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
 %{_libdir}/libguile.a
@@ -149,6 +158,14 @@ rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
 %{_infodir}/*
 
 %changelog
+* Fri Apr 16 2004 Warren Togami <wtogami@redhat.com> 5:1.6.4-11
+- Fix post failure and duplicate rpm in database
+- Compress NEWS
+- other minor cleanups
+
+* Wed Apr 14 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-10
+- Fixed info file stuff (#112487)
+
 * Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
