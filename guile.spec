@@ -4,8 +4,9 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 15
+Release: 16
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
+Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.0-libtool.patch
 Patch2: guile-1.4.1-rpath.patch
 Patch3: guile-1.6.0-unknown_arch.patch
@@ -91,6 +92,14 @@ chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
 ln -s ../../share/slib ${RPM_BUILD_ROOT}%{_datadir}/guile/slib
 ln -s ../../share/slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
+ln -sf 1.6 ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}
+
+# Install additional scripts
+tar zxvf %{SOURCE2}
+pushd guile-1.6-missing-tools
+cp -a scripts/* ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}/scripts
+cp -a ice-9/* ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}/ice-9
+popd
 
 # Remove unpackaged files
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-doc-snarf
@@ -106,15 +115,11 @@ bzip2 NEWS
 rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
-%post devel
 /sbin/install-info  %{_infodir}/guile.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
 
-%preun devel
+%postun -p /sbin/ldconfig
 /sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
 /sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
@@ -127,8 +132,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/guile-tools
 %{_libdir}/libguile.so.*
 %{_libdir}/libguile-ltdl.so.*
-%{_libdir}/libguilereadline-v-12.*
-%{_libdir}/libguile-srfi-srfi-*
+%{_libdir}/libguilereadline-v-12.so.*
+%{_libdir}/libguile-srfi-srfi-*.so.*
 %ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.so.*
 %endif
@@ -138,6 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/guile/slib
 %{_datadir}/guile/slibcat
 %{_datadir}/guile/1.6
+%{_infodir}/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -149,6 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguile-ltdl.a
 %{_libdir}/libguile-ltdl.la
 %{_libdir}/libguile-ltdl.so
+%{_libdir}/libguilereadline-*.a
+%{_libdir}/libguilereadline-*.la
+%{_libdir}/libguile-srfi-srfi-*.a
+%{_libdir}/libguile-srfi-srfi-*.la
 %ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.a
 %{_libdir}/libqthreads.la
@@ -157,9 +167,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
-%{_infodir}/*
 
 %changelog
+* Tue Dec 21 2004 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-16
+- Moved info files to base package as they are not devel related (#139948)
+- Moved static guilereadline and guile-srfi-srfi libs to devel package (#140893)
+- Fixed guile-tools not finding guile lib dir (#142642)
+- Added some nice tools (#142642)
+
 * Wed Dec  8 2004 Jindrich Novy <jnovy@redhat.com> 5:1.6.4-15
 - remove dependency to umb-scheme and replace it by slib
 
