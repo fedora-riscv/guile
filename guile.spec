@@ -3,14 +3,12 @@
 
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
-Version: 1.6.4
-Release: 18
+Version: 1.6.7
+Release: 1
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
-Patch1: guile-1.6.0-libtool.patch
-Patch2: guile-1.4.1-rpath.patch
+Patch2: guile-1.6.7-rpath.patch
 Patch3: guile-1.6.0-unknown_arch.patch
-Patch4: guile-1.6.0-ia64.patch
 Patch5: guile-1.6.0-ppc64.patch
 License: GPL
 Group: Development/Languages
@@ -46,10 +44,8 @@ install the guile package.
 
 %prep
 %setup -q
-%patch1 -p1 -b .libtool
 %patch2 -p1 -b .rpath
 %patch3 -p1 -b .unknown_arch
-%patch4 -p1 -b .ia64
 %patch5 -p1 -b .ppc64
 
 %build
@@ -171,6 +167,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Feb 09 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-1
+- Update to guile-1.6.7
+- Dropped ia64 patch, stuff looks fixed in upstream code
+
 * Wed Jan 12 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-18
 - rebuilt because of new readline
 
