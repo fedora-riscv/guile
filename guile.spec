@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.4
-Release: 8.2
+Release: 9.2.1
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.3.4-sizet.patch
 Patch2: guile-1.6.0-libtool.patch
@@ -149,6 +149,12 @@ rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
 %{_infodir}/*
 
 %changelog
+* Tue Mar 02 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Fri Feb 13 2004 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
 * Wed Aug 27 2003 Bill Nottingham <notting@redhat.com> 5:1.6.4-8.2
 - rebuild (#103148)
 
