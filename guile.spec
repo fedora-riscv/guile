@@ -1,16 +1,15 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
-Version: 1.3.4
-Release: 19a
+Version: 1.4
+Release: 7
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
-URL: http://www.gnu.org/software/guile
 Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
-License: GPL
+Copyright: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
 Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-21
-Epoch: 3
+Epoch: 5
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -41,12 +40,9 @@ install the guile package.
 %patch1 -p1 -b .sizet
 
 %build
+#LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
 %ifarch ia64 alpha s390 s390x
-%ifarch ia64
-libtoolize --copy --force
-export CFLAGS="-O0"
-%endif
-%configure
+CFLAGS="-O0" %configure
 %else
 %configure --with-threads
 %endif
@@ -57,7 +53,6 @@ make
 
 %{makeinstall}
 
-strip ${RPM_BUILD_ROOT}%{_bindir}/guile
 chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*.0.0
 gzip -9nf ${RPM_BUILD_ROOT}%{_infodir}/data-rep*
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
@@ -82,10 +77,10 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS README TODO
+%doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS README
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
-%{_libdir}/libguilereadline*
+%{_libdir}/libguilereadline.so*
 %{_libdir}/libguile.so.*
 %ifnarch ia64 alpha s390 s390x
 %{_libdir}/libqthreads.so.*
@@ -102,26 +97,45 @@ fi
 %defattr(-,root,root)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
-%ifnarch ia64 alpha s390 s390x
-%{_libdir}/libqthreads.so
-%endif
 %{_libdir}/libguile.so
 %{_libdir}/libguile.a
+%{_libdir}/libguile.la
+%{_libdir}/libguilereadline.a
+%{_libdir}/libguilereadline.la
+%ifnarch ia64 alpha s390 s390x
+%{_libdir}/libqthreads.so
+%{_libdir}/libqthreads.a
+%{_libdir}/libqthreads.la
+%endif
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
 %{_infodir}/data-rep*
 
 %changelog
-* Wed Apr 03 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-19/3
-- Added missing libqthreads.so for devel package.
+* Wed Jul 10 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-7
+- Fixed some more %file lib related errors ().
 
-* Tue Mar 26 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-18/3
-- Removed --with-threads on all but i386 as it doesn't work.
-- Added URL tag (#61582)
-- Copyright: -> License:
+* Fri Jun 21 2002 Tim Powers <timp@redhat.com> 1.4-6
+- automated rebuild
 
-* Thu Jan 24 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-17/3
+* Wed Jun 19 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-5
+- Don't forcibly strip binaries
+
+* Thu May 23 2002 Tim Powers <timp@redhat.com>
+- automated rebuild
+
+* Mon May 06 2002 Florian La Roche <Florian.LaRoche@redhat.de>
+- adjust for mainframe and alpha
+
+* Fri Jan 25 2002 Bill Nottingham <notting@redhat.com>
+- ship qthread devel links too
+
+* Fri Jan 25 2002 Phil Knirsch <pknirsch@redhat.com>
+- Update again to 1.4.
+- Disable --with-threads for IA64 as it doesn't work.
+
+* Thu Jan 24 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-17/4
 - Enabled --with-threads and removed --enable-dynamic-linking for configure
   (bug #58597)
 
