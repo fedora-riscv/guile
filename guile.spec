@@ -1,14 +1,21 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
-Version: 1.4
-Release: 8
+Version: 1.6.0
+Release: 4
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
-Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
-Copyright: GPL
+Patch2: guile-1.6.0-libtool.patch
+Patch3: guile-1.6.0-libltdl.patch
+Patch4: guile-1.4.1-rpath.patch
+Patch5: guile-1.6.0-unknown_arch.patch
+Patch6: guile-1.6.0-ia64.patch
+License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
-Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-21
+BuildPrereq: libtool
+Prereq: /sbin/install-info
+Prereq: readline
+Prereq: umb-scheme >= 3.2-21
 Epoch: 5
 
 %description
@@ -36,62 +43,76 @@ install the guile package.
 
 %prep
 %setup -q
-%patch -p1 -b .inet_aton
-%patch1 -p1 -b .sizet
+#%patch1 -p1 -b .sizet
+%patch2 -p1 -b .libtool
+%patch3 -p1 -b .ltdl
+%patch4 -p1 -b .rpath
+%patch5 -p1 -b .unknown_arch
+%patch6 -p1 -b .ia64
 
 %build
-#LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
 %ifarch ia64 alpha s390 s390x ppc
 CFLAGS="-O0" %configure
 %else
 %configure --with-threads
 %endif
-make
+# Ouch! guile forgets to set it's onw shard lib path to use shared uninstalled
+# apps. It ain't pretty, but it works.
+LD_LIBRARY_PATH="`pwd`/libguile/.libs:`pwd`/qt/.libs" make
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
+# Convince guile to be packaged.
+perl -p -i -e "s|^libdir.*|libdir='$RPM_BUILD_ROOT%{_libdir}'|g" \
+        guile-readline/libguilereadline.la
+
+perl -p -i -e "s|^relink_command.*||g" guile-readline/libguilereadline.la
+
 %{makeinstall}
 
-chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*.0.0
-gzip -9nf ${RPM_BUILD_ROOT}%{_infodir}/data-rep*
+# Fix up libtool libraries.
+find $RPM_BUILD_ROOT -name '*.la' | \
+  xargs perl -p -i -e "s|$RPM_BUILD_ROOT||g"
+
+chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
 ln -s ../../share/umb-scheme/slib ${RPM_BUILD_ROOT}%{_datadir}/guile/slib
 ln -s ../../share/umb-scheme/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
 
+# Remove unpackaged files
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-doc-snarf
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-func-name-check
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-snarf.awk
+rm -rf ${RPM_BUILD_ROOT}/usr/include/guile-readline
+rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
+rm -rf ${RPM_BUILD_ROOT}%{_libdir}/libguile-srfi-srfi-*
+
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/ldconfig
+%post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
-
-%post devel
-/sbin/install-info %{_infodir}/data-rep.info.gz %{_infodir}/dir
-
-%preun devel
-if [ "$1" = 0 ]; then
-    /sbin/install-info --delete %{_infodir}/data-rep.info.gz %{_infodir}/dir
-fi
 
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS README
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
-%{_libdir}/libguilereadline.so*
+%{_bindir}/guile-tools
+%{_libdir}/libguilereadline-v-12.so.*
 %{_libdir}/libguile.so.*
-%ifnarch ia64 alpha s390 s390x ppc
+%ifnarch ia64 alpha s390 s390x ppc x86_64
 %{_libdir}/libqthreads.so.*
 %endif
 %dir %{_datadir}/guile
 %dir %{_datadir}/guile/site
 %dir %{_datadir}/guile/%{PACKAGE_VERSION}
-%{_datadir}/guile/%{PACKAGE_VERSION}/ice-9
 %{_datadir}/aclocal/*
 %{_datadir}/guile/slib
 %{_datadir}/guile/slibcat
+%{_datadir}/guile/1.6.0
 
 %files devel
 %defattr(-,root,root)
@@ -100,9 +121,10 @@ fi
 %{_libdir}/libguile.so
 %{_libdir}/libguile.a
 %{_libdir}/libguile.la
-%{_libdir}/libguilereadline.a
-%{_libdir}/libguilereadline.la
-%ifnarch ia64 alpha s390 s390x ppc
+%{_libdir}/libguilereadline-v-12.a
+%{_libdir}/libguilereadline-v-12.la
+%{_libdir}/libguilereadline-v-12.so
+%ifnarch ia64 alpha s390 s390x ppc x86_64
 %{_libdir}/libqthreads.so
 %{_libdir}/libqthreads.a
 %{_libdir}/libqthreads.la
@@ -110,9 +132,39 @@ fi
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
-%{_infodir}/data-rep*
+%{_infodir}/*
 
 %changelog
+* Wed Jan 22 2003 Tim Powers <timp@redhat.com>
+- rebuilt
+
+* Fri Dec 06 2002 Phil Knirsch <pknirsch@redhat.com> 5:1.6.0-3
+- Included s390 as working arch as well, switch to general unknown arch patch
+
+* Tue Dec  3 2002 Tim Powers <timp@redhat.com> 5:1.6.0-2
+- rebuild to fix broken deps
+- fix continuations.h on ia64
+
+* Tue Dec 03 2002 Phil Knirsch <pknirsch@redhat.com> 1.6.0-1
+- Make it build on x86_64.
+- Integrated and fixed Than's updated to 1.6.0.
+- Fixed some things in the %files section.
+
+* Mon Nov 11 2002 Than Ngo <timp@redhat.com> 1.4.1-2
+- fix to build on s390*/x86_64 -> include libguilereadline.so
+- fix to link libltdl
+- don't use rpath
+
+* Thu Nov 07 2002 Phil Knirsch <pknirsch@redhat.com> 1.4.1-1
+- Updated to guile-1.4.1
+- libguilereadline.so doesn't work on x86_64 yet, so don't package it.
+
+* Wed Nov 06 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-10
+- Fixed unpackaged files.
+
+* Tue Nov  5 2002 Bill Nottingham <notting@redhat.com> 1.4-9
+- Remove qthread from x86_64 as well.
+
 * Wed Jul 17 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-8
 - Remove qthread from ppc as well.
 
