@@ -1,14 +1,18 @@
+%define qthreads_archs i386 sparc
+# Once 'as' is fixed on alpha, that arch should be added to qthreads_archs
+
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
-Version: 1.6.0
-Release: 4
+Version: 1.6.4
+Release: 8.2
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch1: guile-1.3.4-sizet.patch
 Patch2: guile-1.6.0-libtool.patch
-Patch3: guile-1.6.0-libltdl.patch
+#Patch3: guile-1.6.0-libltdl.patch
 Patch4: guile-1.4.1-rpath.patch
 Patch5: guile-1.6.0-unknown_arch.patch
 Patch6: guile-1.6.0-ia64.patch
+Patch7: guile-1.6.0-ppc64.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -30,7 +34,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
 Group: Development/Libraries
-Requires: guile = %{PACKAGE_VERSION}
+Requires: guile = %{epoch}:%{PACKAGE_VERSION}
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
@@ -45,20 +49,30 @@ install the guile package.
 %setup -q
 #%patch1 -p1 -b .sizet
 %patch2 -p1 -b .libtool
-%patch3 -p1 -b .ltdl
+#%patch3 -p1 -b .ltdl
 %patch4 -p1 -b .rpath
 %patch5 -p1 -b .unknown_arch
 %patch6 -p1 -b .ia64
+%patch7 -p1 -b .ppc64
 
 %build
-%ifarch ia64 alpha s390 s390x ppc
-CFLAGS="-O0" %configure
-%else
-%configure --with-threads
+
+WITH_THREADS=--with-threads
+%ifnarch %{qthreads_archs}
+WITH_THREADS=
 %endif
+
+%ifarch ia64 s390
+# alpha s390x ppc
+export CFLAGS="$RPM_OPT_FLAGS -O0"
+%endif
+%configure $WITH_THREADS
+
+make -C libguile scmconfig.h
 # Ouch! guile forgets to set it's onw shard lib path to use shared uninstalled
 # apps. It ain't pretty, but it works.
-LD_LIBRARY_PATH="`pwd`/libguile/.libs:`pwd`/qt/.libs" make
+LD_LIBRARY_PATH="`pwd`/libguile/.libs:`pwd`/qt/.libs:`pwd`/libguile-ltdl/.libs" \
+	make LDFLAGS="-L`pwd`/libguile/.libs" %{?_smp_mflags}
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
@@ -86,7 +100,6 @@ rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-func-name-check
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-snarf.awk
 rm -rf ${RPM_BUILD_ROOT}/usr/include/guile-readline
 rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
-rm -rf ${RPM_BUILD_ROOT}%{_libdir}/libguile-srfi-srfi-*
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
@@ -101,33 +114,34 @@ rm -rf ${RPM_BUILD_ROOT}%{_libdir}/libguile-srfi-srfi-*
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
 %{_bindir}/guile-tools
-%{_libdir}/libguilereadline-v-12.so.*
 %{_libdir}/libguile.so.*
-%ifnarch ia64 alpha s390 s390x ppc x86_64
+%{_libdir}/libguile-ltdl.so.*
+%{_libdir}/libguilereadline-v-12.*
+%{_libdir}/libguile-srfi-srfi-*
+%ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.so.*
 %endif
 %dir %{_datadir}/guile
 %dir %{_datadir}/guile/site
-%dir %{_datadir}/guile/%{PACKAGE_VERSION}
 %{_datadir}/aclocal/*
 %{_datadir}/guile/slib
 %{_datadir}/guile/slibcat
-%{_datadir}/guile/1.6.0
+%{_datadir}/guile/1.6
 
 %files devel
 %defattr(-,root,root)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
-%{_libdir}/libguile.so
 %{_libdir}/libguile.a
 %{_libdir}/libguile.la
-%{_libdir}/libguilereadline-v-12.a
-%{_libdir}/libguilereadline-v-12.la
-%{_libdir}/libguilereadline-v-12.so
-%ifnarch ia64 alpha s390 s390x ppc x86_64
-%{_libdir}/libqthreads.so
+%{_libdir}/libguile.so
+%{_libdir}/libguile-ltdl.a
+%{_libdir}/libguile-ltdl.la
+%{_libdir}/libguile-ltdl.so
+%ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.a
 %{_libdir}/libqthreads.la
+%{_libdir}/libqthreads.so
 %endif
 %{_includedir}/guile
 %{_includedir}/libguile
@@ -135,6 +149,47 @@ rm -rf ${RPM_BUILD_ROOT}%{_libdir}/libguile-srfi-srfi-*
 %{_infodir}/*
 
 %changelog
+* Wed Aug 27 2003 Bill Nottingham <notting@redhat.com> 5:1.6.4-8.2
+- rebuild (#103148)
+
+* Tue Aug 19 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-8.1
+- rebuilt
+
+* Tue Aug 19 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-8
+- Moved dynamic loadable libraries out file devel into main (#98392).
+
+* Wed Jul 02 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-7.1
+- rebuilt
+
+* Wed Jul 02 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-7
+- Added srfi libs (#98392).
+
+* Sun Jun  8 2003 Tim Powers <timp@redhat.com> 5:1.6.4-6.1
+- add epoch for versioned requires
+- built for RHEL
+
+* Wed Jun 04 2003 Elliot Lee <sopwith@redhat.com>
+- rebuilt
+
+* Fri May 16 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-5
+- Bumped release and rebuilt.
+
+* Fri May 16 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-4
+- Install and package info files, too.
+
+* Fri May 16 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-3
+- Bumped release and rebuilt.
+
+* Fri May 16 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-2
+- Fixed .la file problem, moved from devel to normal package.
+
+* Tue May 06 2003 Phil Knirsch <pknirsch@redhat.com> 5:1.6.4-1
+- Update to 1.6.4
+
+* Thu Feb 13 2003 Elliot Lee <sopwith@redhat.com> 5:1.6.0-5
+- Patch7 - fix for ppc64
+- Fix qthreads dealie, including actually enabling them
+
 * Wed Jan 22 2003 Tim Powers <timp@redhat.com>
 - rebuilt
 
@@ -147,7 +202,7 @@ rm -rf ${RPM_BUILD_ROOT}%{_libdir}/libguile-srfi-srfi-*
 
 * Tue Dec 03 2002 Phil Knirsch <pknirsch@redhat.com> 1.6.0-1
 - Make it build on x86_64.
-- Integrated and fixed Than's updated to 1.6.0.
+- Integrated and fixed Than's update to 1.6.0.
 - Fixed some things in the %files section.
 
 * Mon Nov 11 2002 Than Ngo <timp@redhat.com> 1.4.1-2
