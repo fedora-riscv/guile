@@ -1,9 +1,10 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 13
+Release: 14
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
+Patch1: guile-1.3.4-sizet.patch
 Copyright: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -36,6 +37,7 @@ install the guile package.
 %prep
 %setup -q
 %patch -p1 -b .inet_aton
+%patch1 -p1 -b .sizet
 
 %build
 LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
@@ -102,6 +104,9 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Mon Jun 11 2001 Florian La Roche <Florian.LaRoche@redhat.de>
+- size_t patch from <oliver.paukstadt@millenux.com>
+
 * Fri May 11 2001 Bernhard Rosenkraenzer <bero@redhat.com> 1.3.4-13
 - Rebuild with new readline
 
