@@ -1,21 +1,25 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 16
+Release: 18
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
+URL: http://www.gnu.org/software/guile
 Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
-Copyright: GPL
+License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
 Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-21
 Epoch: 3
 
 %description
-GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a
-library implementation of the Scheme programming language, written in
-C. GUILE provides a machine-independent execution platform that can be
-linked in as a library during the building of extensible programs.
+GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
+implementation of the Scheme programming language, written in C.  GUILE
+provides a machine-independent execution platform that can be linked in
+as a library during the building of extensible programs.
+
+Install the guile package if you'd like to add extensibility to programs
+that you are developing.
 
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
@@ -24,12 +28,12 @@ Requires: guile = %{PACKAGE_VERSION}
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
-that you will need to develop applications that are linked with the
+that you'll need to develop applications that are linked with the
 GUILE extensibility library.
 
 You need to install the guile-devel package if you want to develop
-applications that will be linked to GUILE. You also need to install
-the guile package.
+applications that will be linked to GUILE.  You'll also need to
+install the guile package.
 
 %prep
 %setup -q
@@ -37,11 +41,14 @@ the guile package.
 %patch1 -p1 -b .sizet
 
 %build
-#LDFLAGS="-L`pwd`/libguile -L`pwd`/libguile/.libs"; export LDFLAGS
+%ifarch ia64 alpha
 %ifarch ia64
-CFLAGS="-O0" %configure --enable-dynamic-linking
+libtoolize --copy --force
+export CFLAGS="-O0"
+%endif
+%configure
 %else
-%configure --enable-dynamic-linking
+%configure --with-threads
 %endif
 make
 
@@ -80,6 +87,9 @@ fi
 %{_bindir}/guile
 %{_libdir}/libguilereadline*
 %{_libdir}/libguile.so.*
+%ifnarch ia64 alpha
+%{_libdir}/libqthreads.so.*
+%endif
 %dir %{_datadir}/guile
 %dir %{_datadir}/guile/site
 %dir %{_datadir}/guile/%{PACKAGE_VERSION}
@@ -100,6 +110,15 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
+* Tue Mar 26 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-18/3
+- Removed --with-threads on all but i386 as it doesn't work.
+- Added URL tag (#61582)
+- Copyright: -> License:
+
+* Thu Jan 24 2002 Phil Knirsch <pknirsch@redhat.com> 1.3.4-17/3
+- Enabled --with-threads and removed --enable-dynamic-linking for configure
+  (bug #58597)
+
 * Mon Sep  3 2001 Philipp Knirsch <pknirsch@redhat.de> 1.3.4-16/3
 - Fixed problem with read-only /usr pollution of /usr/share/umb-scheme/slibcat
   (#52742)
