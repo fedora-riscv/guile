@@ -1,15 +1,15 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.3.4
-Release: 15
+Release: 16
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Patch: guile-1.3.4-inet_aton.patch
 Patch1: guile-1.3.4-sizet.patch
 Copyright: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
-Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-15
-Epoch: 2
+Prereq: /sbin/install-info, readline, umb-scheme >= 3.2-21
+Epoch: 3
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a
@@ -62,7 +62,6 @@ ln -s ../../share/umb-scheme/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
 
 %post
 /sbin/ldconfig
-%{_bindir}/guile -c "(use-modules (ice-9 slib)) (require 'new-catalog)"
 
 %postun -p /sbin/ldconfig
 
@@ -101,13 +100,17 @@ fi
 %{_infodir}/data-rep*
 
 %changelog
-* Wed Aug 22 2001 Philipp Knirsch <pknirsch@redhat.de>
+* Mon Sep  3 2001 Philipp Knirsch <pknirsch@redhat.de> 1.3.4-16/3
+- Fixed problem with read-only /usr pollution of /usr/share/umb-scheme/slibcat
+  (#52742)
+
+* Wed Aug 22 2001 Philipp Knirsch <pknirsch@redhat.de> 1.3.4-15/2
 - Fixed /tmp buildroot pollution (#50398)
 
-* Mon Jun 11 2001 Florian La Roche <Florian.LaRoche@redhat.de>
+* Mon Jun 12 2001 Florian La Roche <Florian.LaRoche@redhat.de> 1.3.4-14/1
 - size_t patch from <oliver.paukstadt@millenux.com>
 
-* Fri May 11 2001 Bernhard Rosenkraenzer <bero@redhat.com> 1.3.4-13
+* Fri May 11 2001 Bernhard Rosenkraenzer <bero@redhat.com> 1.3.4-13/1
 - Rebuild with new readline
 
 * Wed Feb 28 2001 Philipp Knirsch <pknirsch@redhat.de>
