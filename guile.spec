@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 2
+Release: 3
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.7-rpath.patch
@@ -105,6 +105,7 @@ rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-func-name-check
 rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-snarf.awk
 rm -rf ${RPM_BUILD_ROOT}/usr/include/guile-readline
 rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
+rm -f ${RPM_BUILD_ROOT}/%{_datadir}/guile/%{version}
 
 # Compress large documentation
 bzip2 NEWS
@@ -155,6 +156,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguile-ltdl.a
 %{_libdir}/libguile-ltdl.la
 %{_libdir}/libguile-ltdl.so
+%{_libdir}/libguile-srfi-srfi-13-14-v-1.so
+%{_libdir}/libguile-srfi-srfi-4-v-1.so
+%{_libdir}/libguilereadline-v-12.so
 %{_libdir}/libguilereadline-*.a
 %{_libdir}/libguilereadline-*.la
 %{_libdir}/libguile-srfi-srfi-*.a
