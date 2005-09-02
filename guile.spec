@@ -11,7 +11,7 @@ Patch1: guile-1.6.7-rpath.patch
 Patch2: guile-1.6.0-unknown_arch.patch
 Patch3: guile-1.6.0-ppc64.patch
 Patch4: guile-1.6.7-ltdl.patch
-Patch5: guile-1.6.7-x86_64.patch
+Patch5: guile-1.6.7-64bit.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -50,7 +50,7 @@ install the guile package.
 %patch2 -p1 -b .unknown_arch
 %patch3 -p1 -b .ppc64
 %patch4 -p1 -b .ltdl
-%patch5 -p1 -b .x86_64
+%patch5 -p1 -b .64bit
 
 %build
 
@@ -176,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Fri Sep 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-4
-- Fix dynamic linking on x86_64 (#159971)
+- Fix dynamic linking on 64bit archs (#159971)
 
 * Wed Mar 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-2
 - bump release and rebuild with gcc 4
