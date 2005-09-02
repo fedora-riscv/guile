@@ -4,13 +4,14 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 3
+Release: 4
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.7-rpath.patch
 Patch2: guile-1.6.0-unknown_arch.patch
 Patch3: guile-1.6.0-ppc64.patch
 Patch4: guile-1.6.7-ltdl.patch
+Patch5: guile-1.6.7-x86_64.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -49,6 +50,7 @@ install the guile package.
 %patch2 -p1 -b .unknown_arch
 %patch3 -p1 -b .ppc64
 %patch4 -p1 -b .ltdl
+%patch5 -p1 -b .x86_64
 
 %build
 
@@ -173,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Fri Sep 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-4
+- Fix dynamic linking on x86_64 (#159971)
+
 * Wed Mar 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-2
 - bump release and rebuild with gcc 4
 - Fixed problem with ltdl and gcc 4 rebuild
