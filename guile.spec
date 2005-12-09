@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 4
+Release: 4.1
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.7-rpath.patch
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
+- rebuilt
+
 * Fri Sep 02 2005 Phil Knirsch <pknirsch@redhat.com> 5:1.6.7-4
 - Fix dynamic linking on 64bit archs (#159971)
 
