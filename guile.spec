@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 4.1
+Release: 5
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.7-rpath.patch
@@ -12,6 +12,7 @@ Patch2: guile-1.6.0-unknown_arch.patch
 Patch3: guile-1.6.0-ppc64.patch
 Patch4: guile-1.6.7-ltdl.patch
 Patch5: guile-1.6.7-64bit.patch
+Patch6: guile-1.6.7-noexecstack.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -51,6 +52,7 @@ install the guile package.
 %patch3 -p1 -b .ppc64
 %patch4 -p1 -b .ltdl
 %patch5 -p1 -b .64bit
+%patch6 -p1 -b .noexecstack
 
 %build
 
@@ -175,6 +177,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Mon Feb 06 2006 Miroslav Lichvar <mlichvar@redhat.com> 5:1.6.7-5
+- Avoid marking qthreads library as requiring executable stack (#179274)
+
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
