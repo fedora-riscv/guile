@@ -4,7 +4,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.6.7
-Release: 5.2
+Release: 6
 Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
 Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
 Patch1: guile-1.6.7-rpath.patch
@@ -138,7 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguile.so.*
 %{_libdir}/libguile-ltdl.so.*
 %{_libdir}/libguilereadline-v-12.so.*
+%{_libdir}/libguilereadline-*.la
 %{_libdir}/libguile-srfi-srfi-*.so.*
+%{_libdir}/libguile-srfi-srfi-*.la
 %ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.so.*
 %endif
@@ -164,9 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguile-srfi-srfi-4-v-1.so
 %{_libdir}/libguilereadline-v-12.so
 %{_libdir}/libguilereadline-*.a
-%{_libdir}/libguilereadline-*.la
 %{_libdir}/libguile-srfi-srfi-*.a
-%{_libdir}/libguile-srfi-srfi-*.la
 %ifarch %{qthreads_archs}
 %{_libdir}/libqthreads.a
 %{_libdir}/libqthreads.la
@@ -177,6 +177,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Feb 28 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.6.7-6
+- move .la files for modules from devel to main package (#182242)
+
 * Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 5:1.6.7-5.2
 - bump again for double-long bug on ppc(64)
 
