@@ -1,25 +1,18 @@
-%define qthreads_archs i386 sparc
-# Once 'as' is fixed on alpha, that arch should be added to qthreads_archs
-
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
-Version: 1.6.7
-Release: 6
-Source: ftp://ftp.gnu.org/gnu/guile-%{version}.tar.gz
-Source2: http://ai.king.net.pl/guile-1.6-missing-tools.tar.gz
-Patch1: guile-1.6.7-rpath.patch
-Patch2: guile-1.6.0-unknown_arch.patch
-Patch3: guile-1.6.0-ppc64.patch
-Patch4: guile-1.6.7-ltdl.patch
-Patch5: guile-1.6.7-64bit.patch
-Patch6: guile-1.6.7-noexecstack.patch
+Version: 1.8.0
+Release: 1
+Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
+URL: http://www.gnu.org/software/guile/
+Patch1: guile-1.8.0-rpath.patch
+Patch2: guile-1.8.0-slib.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
-BuildPrereq: libtool libtool-ltdl-devel
-Prereq: /sbin/install-info
-Prereq: readline
-Prereq: slib >= 3a1-1
+BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
+Requires: slib >= 3a1
+Requires(post): /sbin/install-info
+Requires(postun): /sbin/install-info
 Epoch: 5
 
 %description
@@ -48,68 +41,25 @@ install the guile package.
 %prep
 %setup -q
 %patch1 -p1 -b .rpath
-%patch2 -p1 -b .unknown_arch
-%patch3 -p1 -b .ppc64
-%patch4 -p1 -b .ltdl
-%patch5 -p1 -b .64bit
-%patch6 -p1 -b .noexecstack
+%patch2 -p1 -b .slib
 
 %build
 
-WITH_THREADS=--with-threads
-%ifnarch %{qthreads_archs}
-WITH_THREADS=
-%endif
-
-%ifarch ia64
+%ifarch x86_64
 export CFLAGS="$RPM_OPT_FLAGS -O0"
 %endif
-%configure $WITH_THREADS
+%configure --disable-error-on-warning
 
-# Multilib fix for procedures.txt
-perl -pi -e 's|threads.doc||' `find . -name Makefile`
-
-make -C libguile scmconfig.h
-# Ouch! guile forgets to set it's onw shard lib path to use shared uninstalled
-# apps. It ain't pretty, but it works.
-LD_LIBRARY_PATH="`pwd`/libguile/.libs:`pwd`/qt/.libs:`pwd`/libguile-ltdl/.libs" \
-	make LDFLAGS="-L`pwd`/libguile/.libs"
+make
 
 %install
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
-
-# Convince guile to be packaged.
-perl -p -i -e "s|^libdir.*|libdir='$RPM_BUILD_ROOT%{_libdir}'|g" \
-        guile-readline/libguilereadline.la
-
-perl -p -i -e "s|^relink_command.*||g" guile-readline/libguilereadline.la
+rm -rf $RPM_BUILD_ROOT
 
 %{makeinstall}
 
-# Fix up libtool libraries.
-find $RPM_BUILD_ROOT -name '*.la' | \
-  xargs perl -p -i -e "s|$RPM_BUILD_ROOT||g"
-
-chmod +x ${RPM_BUILD_ROOT}%{_libdir}/libguile.so.*
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
-ln -s ../../share/slib ${RPM_BUILD_ROOT}%{_datadir}/guile/slib
-ln -s ../../share/slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/slibcat
-ln -sf 1.6 ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}
-
-# Install additional scripts
-tar zxvf %{SOURCE2}
-pushd guile-1.6-missing-tools
-cp -a scripts/* ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}/scripts
-cp -a ice-9/* ${RPM_BUILD_ROOT}%{_datadir}/guile/%{version}/ice-9
-popd
-
-# Remove unpackaged files
-rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-doc-snarf
-rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-func-name-check
-rm -f ${RPM_BUILD_ROOT}%{_bindir}/guile-snarf.awk
-rm -rf ${RPM_BUILD_ROOT}/usr/include/guile-readline
-rm -rf ${RPM_BUILD_ROOT}%{_datadir}/info/dir
-rm -f ${RPM_BUILD_ROOT}/%{_datadir}/guile/%{version}
+ln -s ../../slib ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slib
+ln -s ../../slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slibcat
 
 # Compress large documentation
 bzip2 NEWS
@@ -122,61 +72,50 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/install-info  %{_infodir}/guile.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
+/sbin/install-info  %{_infodir}/guile-tut.info.gz %{_infodir}/dir
 
-%postun
-/sbin/ldconfig
-/sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
-/sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
-/sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
+%postun -p /sbin/ldconfig
+
+%preun
+if [ "$1" = 0 ]; then
+    /sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
+    /sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
+    /sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
+    /sbin/install-info --delete %{_infodir}/guile-tut.info.gz %{_infodir}/dir
+fi
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING ChangeLog GUILE-VERSION HACKING NEWS.bz2 README
+%doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README
 %doc SNAPSHOTS ANON-CVS THANKS
 %{_bindir}/guile
 %{_bindir}/guile-tools
-%{_libdir}/libguile.so.*
-%{_libdir}/libguile-ltdl.so.*
-%{_libdir}/libguilereadline-v-12.so.*
+%{_libdir}/libguile*.so.*
 %{_libdir}/libguilereadline-*.la
-%{_libdir}/libguile-srfi-srfi-*.so.*
 %{_libdir}/libguile-srfi-srfi-*.la
-%ifarch %{qthreads_archs}
-%{_libdir}/libqthreads.so.*
-%endif
-%dir %{_datadir}/guile
-%dir %{_datadir}/guile/site
-%{_datadir}/aclocal/*
-%{_datadir}/guile/slib
-%{_datadir}/guile/slibcat
-%{_datadir}/guile/1.6
+%{_datadir}/guile
 %{_infodir}/*
 
 %files devel
 %defattr(-,root,root,-)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
-%{_libdir}/libguile.a
+%{_datadir}/aclocal/*
+%{_libdir}/libguile*.a
+%{_libdir}/libguile*.so
 %{_libdir}/libguile.la
-%{_libdir}/libguile.so
-%{_libdir}/libguile-ltdl.a
-%{_libdir}/libguile-ltdl.la
-%{_libdir}/libguile-ltdl.so
-%{_libdir}/libguile-srfi-srfi-13-14-v-1.so
-%{_libdir}/libguile-srfi-srfi-4-v-1.so
-%{_libdir}/libguilereadline-v-12.so
-%{_libdir}/libguilereadline-*.a
-%{_libdir}/libguile-srfi-srfi-*.a
-%ifarch %{qthreads_archs}
-%{_libdir}/libqthreads.a
-%{_libdir}/libqthreads.la
-%{_libdir}/libqthreads.so
-%endif
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
 
 %changelog
+* Mon Mar 20 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
+- update to guile-1.8.0
+- fix slib.scm for slib-3a3
+- install guile-tut info
+- move guile.m4 to devel package
+- spec cleanup
+
 * Tue Feb 28 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.6.7-6
 - move .la files for modules from devel to main package (#182242)
 
