@@ -6,6 +6,7 @@ Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
+Patch3: guile-1.8.0-stacksize.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -42,12 +43,10 @@ install the guile package.
 %setup -q
 %patch1 -p1 -b .rpath
 %patch2 -p1 -b .slib
+%patch3 -p1 -b .stacksize
 
 %build
 
-%ifarch x86_64
-export CFLAGS="$RPM_OPT_FLAGS -O0"
-%endif
 %configure --disable-error-on-warning
 
 make
@@ -109,7 +108,7 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
-* Mon Mar 20 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
+* Wed Mar 22 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
 - update to guile-1.8.0
 - fix slib.scm for slib-3a3
 - install guile-tut info
