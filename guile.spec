@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 1
+Release: 2
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -60,6 +60,8 @@ mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
 ln -s ../../slib ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slib
 ln -s ../../slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slibcat
 
+rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+
 # Compress large documentation
 bzip2 NEWS
 
@@ -108,6 +110,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue May 09 2006 Bill Nottingham <notting@redhat.com> - 5:1.8.0-2
+- don't package %{_infodir}/dir
+
 * Tue May 09 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
 - update to guile-1.8.0
 - fix slib.scm for slib-3a3
