@@ -47,7 +47,6 @@ install the guile package.
 
 %build
 
-export CFLAGS="$RPM_OPT_FLAGS -O0"
 %configure --disable-error-on-warning
 
 make
@@ -109,7 +108,7 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
-* Thu Apr 27 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
+* Tue May 09 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
 - update to guile-1.8.0
 - fix slib.scm for slib-3a3
 - install guile-tut info
