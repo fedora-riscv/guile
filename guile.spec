@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 2
+Release: 3
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -47,7 +47,7 @@ install the guile package.
 
 %build
 
-%configure --disable-error-on-warning
+%configure --disable-static --disable-error-on-warning
 
 make
 
@@ -60,6 +60,7 @@ mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
 ln -s ../../slib ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slib
 ln -s ../../slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slibcat
 
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*.la
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 
 # Compress large documentation
@@ -92,8 +93,8 @@ fi
 %{_bindir}/guile
 %{_bindir}/guile-tools
 %{_libdir}/libguile*.so.*
-%{_libdir}/libguilereadline-*.la
-%{_libdir}/libguile-srfi-srfi-*.la
+%{_libdir}/libguilereadline-*.so
+%{_libdir}/libguile-srfi-srfi-*.so
 %{_datadir}/guile
 %{_infodir}/*
 
@@ -102,14 +103,16 @@ fi
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
 %{_datadir}/aclocal/*
-%{_libdir}/libguile*.a
-%{_libdir}/libguile*.so
-%{_libdir}/libguile.la
+%{_libdir}/libguile.so
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
 
 %changelog
+* Tue May 16 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-3
+- don't package .la files and static libraries (#191595)
+- move module .so files from devel to main package
+
 * Tue May 09 2006 Bill Nottingham <notting@redhat.com> - 5:1.8.0-2
 - don't package %{_infodir}/dir
 
