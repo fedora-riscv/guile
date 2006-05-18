@@ -1,12 +1,13 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 3
+Release: 4
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
 Patch3: guile-1.8.0-stacksize.patch
+Patch4: guile-1.8.0-deplibs.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
@@ -28,7 +29,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
 Group: Development/Libraries
-Requires: guile = %{epoch}:%{PACKAGE_VERSION}
+Requires: guile = %{epoch}:%{PACKAGE_VERSION} gmp-devel
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
@@ -44,6 +45,7 @@ install the guile package.
 %patch1 -p1 -b .rpath
 %patch2 -p1 -b .slib
 %patch3 -p1 -b .stacksize
+%patch4 -p1 -b .deplibs
 
 %build
 
@@ -109,6 +111,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu May 18 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-4
+- add gmp-devel to requires for devel package (#192107)
+- fix guile-config link (#191595)
+
 * Tue May 16 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-3
 - don't package .la files and static libraries (#191595)
 - move module .so files from devel to main package
