@@ -1,0 +1,42 @@
+--- guile-1.8.0/libguile/Makefile.in.multilib	2006-05-23 14:28:20.000000000 +0200
++++ guile-1.8.0/libguile/Makefile.in	2006-05-23 15:52:05.000000000 +0200
+@@ -1622,6 +1622,11 @@
+ 	  f=$(am__strip_dir) \
+ 	  echo " $(nodist_modincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(modincludedir)/$$f'"; \
+ 	  $(nodist_modincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(modincludedir)/$$f"; \
++	  if [ "$$f" = "scmconfig.h" ]; then \
++	    grep -q "SCM_SIZEOF_LONG 4" "$(DESTDIR)$(modincludedir)/$$f" && g=32 || g=64; \
++	    mv "$(DESTDIR)$(modincludedir)/$$f" "$(DESTDIR)$(modincludedir)/scmconfig-$$g.h"; \
++	    $(nodist_modincludeHEADERS_INSTALL) "$${d}scmconfig.h.mlib" "$(DESTDIR)$(modincludedir)/$$f"; \
++	  fi; \
+ 	done
+ 
+ uninstall-nodist_modincludeHEADERS:
+--- guile-1.8.0/libguile/guile-snarf.in.multilib	2006-02-12 14:29:12.000000000 +0100
++++ guile-1.8.0/libguile/guile-snarf.in	2006-05-23 15:53:23.000000000 +0200
+@@ -39,7 +39,6 @@
+ #   #endif
+ # 
+ # If the environment variable CPP is set, use its value instead of the
+-# C pre-processor determined at Guile configure-time: "@CPP@".
+ 
+ # Code:
+ 
+@@ -72,7 +71,7 @@
+ tempdir="/tmp/snarf.$$"
+ (umask 077 && mkdir $tempdir) || exit 1
+ temp="$tempdir/tmp"
+-if [ x"$CPP" = x ] ; then cpp="@CPP@" ; else cpp="$CPP" ; fi
++if [ x"$CPP" = x ] ; then cpp="gcc -E" ; else cpp="$CPP" ; fi
+ 
+ trap "rm -rf $tempdir" 0 1 2 15
+ 
+--- guile-1.8.0/libguile/scmconfig.h.mlib.multilib	1970-01-01 01:00:00.000000000 +0100
++++ guile-1.8.0/libguile/scmconfig.h.mlib	2006-05-23 15:51:30.000000000 +0200
+@@ -0,0 +1,6 @@
++#include <bits/wordsize.h>
++#if __WORDSIZE == 32
++#include "libguile/scmconfig-32.h"
++#else
++#include "libguile/scmconfig-64.h"
++#endif

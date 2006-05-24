@@ -1,18 +1,18 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 4
+Release: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
 Patch3: guile-1.8.0-stacksize.patch
 Patch4: guile-1.8.0-deplibs.patch
+Patch5: guile-1.8.0-multilib.patch
 License: GPL
 Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
-Requires: slib >= 3a1
 Requires(post): /sbin/install-info
 Requires(postun): /sbin/install-info
 Epoch: 5
@@ -46,6 +46,7 @@ install the guile package.
 %patch2 -p1 -b .slib
 %patch3 -p1 -b .stacksize
 %patch4 -p1 -b .deplibs
+%patch5 -p1 -b .multilib
 
 %build
 
@@ -59,8 +60,6 @@ rm -rf $RPM_BUILD_ROOT
 %{makeinstall}
 
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
-ln -s ../../slib ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slib
-ln -s ../../slib/slibcat ${RPM_BUILD_ROOT}%{_datadir}/guile/site/slibcat
 
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*.la
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
@@ -88,6 +87,16 @@ if [ "$1" = 0 ]; then
     /sbin/install-info --delete %{_infodir}/guile-tut.info.gz %{_infodir}/dir
 fi
 
+%triggerin -- slib
+ln -sfn ../../slib %{_datadir}/guile/site/slib
+rm -f %{_datadir}/guile/site/slibcat
+%{_bindir}/guile -c "(use-modules (ice-9 slib)) (require 'new-catalog)"
+
+%triggerun -- slib
+if [ "$1" = 0 -o "$2" = 0 ]; then
+    rm -f %{_datadir}/guile/site/{slib,slibcat}
+fi
+
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README
@@ -111,6 +120,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Wed May 24 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-5
+- remove dependency on slib, provide support through triggers
+- fix multilib -devel conflicts in guile-snarf and scmconfig.h (#192684)
+
 * Thu May 18 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-4
 - add gmp-devel to requires for devel package (#192107)
 - fix guile-config link (#191595)
