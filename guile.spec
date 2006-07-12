@@ -7,7 +7,6 @@ URL: http://www.gnu.org/software/guile/
 Patch0: guile-1.8.0-20060712cvs.patch.gz
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
-Patch3: guile-1.8.0-stacksize.patch
 Patch4: guile-1.8.0-deplibs.patch
 Patch5: guile-1.8.0-multilib.patch
 License: GPL
