@@ -1,9 +1,10 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 5
+Release: 6.20060712cvs
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
+Patch0: guile-1.8.0-20060712cvs.patch.gz
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
 Patch3: guile-1.8.0-stacksize.patch
@@ -14,7 +15,8 @@ Group: Development/Languages
 Buildroot: %{_tmppath}/%{name}-root
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
 Requires(post): /sbin/install-info
-Requires(postun): /sbin/install-info
+Requires(preun): /sbin/install-info
+Requires: coreutils
 Epoch: 5
 
 %description
@@ -42,9 +44,9 @@ install the guile package.
 
 %prep
 %setup -q
+%patch0 -p1
 %patch1 -p1 -b .rpath
 %patch2 -p1 -b .slib
-%patch3 -p1 -b .stacksize
 %patch4 -p1 -b .deplibs
 %patch5 -p1 -b .multilib
 
@@ -52,12 +54,12 @@ install the guile package.
 
 %configure --disable-static --disable-error-on-warning
 
-make
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{makeinstall}
+%makeinstall
 
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
 
@@ -120,6 +122,11 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Jul 12 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-6.20060712cvs
+- update from CVS
+- fix requires (#196016)
+- link libguile with pthread (#198215)
+
 * Wed May 24 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-5
 - remove dependency on slib, provide support through triggers
 - fix multilib -devel conflicts in guile-snarf and scmconfig.h (#192684)
