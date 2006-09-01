@@ -1,10 +1,10 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 6.20060712cvs
+Release: 7.20060831cvs
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
-Patch0: guile-1.8.0-20060712cvs.patch.gz
+Patch0: guile-1.8.0-20060831cvs.patch.gz
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.0-slib.patch
 Patch4: guile-1.8.0-deplibs.patch
@@ -44,7 +44,7 @@ install the guile package.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1 -b .rpath
+#%patch1 -p1 -b .rpath
 %patch2 -p1 -b .slib
 %patch4 -p1 -b .deplibs
 %patch5 -p1 -b .multilib
@@ -121,6 +121,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Fri Sep 01 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-7.20060831cvs
+- update from CVS
+
 * Wed Jul 12 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-6.20060712cvs
 - update from CVS
 - fix requires (#196016)
