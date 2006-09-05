@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.0
-Release: 7.20060831cvs
+Release: 8.20060831cvs
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch0: guile-1.8.0-20060831cvs.patch.gz
@@ -89,13 +89,13 @@ if [ "$1" = 0 ]; then
 fi
 
 %triggerin -- slib
-ln -sfn ../../slib %{_datadir}/guile/site/slib
+ln -sfT ../../slib %{_datadir}/guile/site/slib
 rm -f %{_datadir}/guile/site/slibcat
-%{_bindir}/guile -c "(use-modules (ice-9 slib)) (require 'new-catalog)"
+%{_bindir}/guile -c "(use-modules (ice-9 slib)) (require 'new-catalog)" || :
 
 %triggerun -- slib
 if [ "$1" = 0 -o "$2" = 0 ]; then
-    rm -f %{_datadir}/guile/site/{slib,slibcat}
+    rm -f %{_datadir}/guile/site/slib{,cat}
 fi
 
 %files
@@ -121,6 +121,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Sep 04 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-8.20060831cvs
+- make triggerin scriptlet a bit safer
+
 * Fri Sep 01 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-7.20060831cvs
 - update from CVS
 
