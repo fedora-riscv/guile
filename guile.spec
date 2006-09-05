@@ -121,7 +121,7 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
-* Tue Sep 04 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-8.20060831cvs
+* Tue Sep 05 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-8.20060831cvs
 - make triggerin scriptlet a bit safer
 
 * Fri Sep 01 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-7.20060831cvs
