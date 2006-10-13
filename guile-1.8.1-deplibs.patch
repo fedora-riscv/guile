@@ -1,0 +1,45 @@
+--- guile-1.8.1/libguile/Makefile.in.deplibs	2006-10-07 05:54:33.000000000 +0200
++++ guile-1.8.1/libguile/Makefile.in	2006-10-09 10:54:38.000000000 +0200
+@@ -441,7 +441,7 @@
+ 
+ libguile_la_DEPENDENCIES = @LIBLOBJS@
+ libguile_la_LIBADD = @LIBLOBJS@
+-libguile_la_LDFLAGS = @LTLIBINTL@ -version-info @LIBGUILE_INTERFACE_CURRENT@:@LIBGUILE_INTERFACE_REVISION@:@LIBGUILE_INTERFACE_AGE@ -export-dynamic -no-undefined
++libguile_la_LDFLAGS = @LTLIBINTL@ -version-info @LIBGUILE_INTERFACE_CURRENT@:@LIBGUILE_INTERFACE_REVISION@:@LIBGUILE_INTERFACE_AGE@ -export-dynamic -no-undefined -pthread
+ 
+ # These are headers visible as <guile/mumble.h>
+ pkginclude_HEADERS = gh.h
+@@ -1908,8 +1908,8 @@
+ 	@echo '#define SCM_LIBRARY_DIR "$(pkgdatadir)/$(GUILE_EFFECTIVE_VERSION)"'>>libpath.tmp
+ 	@echo '#define SCM_SITE_DIR "$(pkgdatadir)/site"' >> libpath.tmp
+ 	@echo '#define SCM_BUILD_INFO { \' >> libpath.tmp
+-	@echo '	{ "srcdir", "'"`cd @srcdir@; pwd`"'" }, \' >> libpath.tmp
+-	@echo ' { "top_srcdir",    "@top_srcdir_absolute@" }, \' >> libpath.tmp
++	@echo '	{ "srcdir", "" }, \' >> libpath.tmp
++	@echo ' { "top_srcdir",    "" }, \' >> libpath.tmp
+ 	@echo '	{ "prefix",	   "@prefix@" }, \' >> libpath.tmp
+ 	@echo '	{ "exec_prefix",   "@exec_prefix@" }, \' >> libpath.tmp
+ 	@echo '	{ "bindir",	   "@bindir@" }, \' >> libpath.tmp
+@@ -1930,7 +1930,7 @@
+ 	@echo '	{ "guileversion", "@GUILE_VERSION@" }, \' >> libpath.tmp
+ 	@echo '	{ "libguileinterface", "@LIBGUILE_INTERFACE@" }, \' \
+ 		>> libpath.tmp
+-	@echo '	{ "LIBS",	   "@GUILE_LIBS@" }, \' >> libpath.tmp
++	@echo '	{ "LIBS",	   "" }, \' >> libpath.tmp
+ 	@echo '	{ "CFLAGS",	   "@GUILE_CFLAGS@" }, \' >> libpath.tmp
+ 	@echo '	{ "buildstamp",    "'"`date`"'" }, \' >> libpath.tmp
+ 	@echo '}' >> libpath.tmp
+--- guile-1.8.1/guile-config/guile-config.in.deplibs	2006-09-20 02:19:02.000000000 +0200
++++ guile-1.8.1/guile-config/guile-config.in	2006-10-09 11:00:02.000000000 +0200
+@@ -151,9 +151,9 @@
+     (display (string-join
+ 	      (list
+ 	       (get-build-info 'CFLAGS)
+-	       "-lguile -lltdl" 
++	       "-lguile" 
+                (if (or (string=? libdir "/usr/lib")
+-                       (string=? libdir "/usr/lib/"))
++                       (string=? libdir "/usr/lib64"))
+ 		   ""
+ 		   (string-append "-L" (get-build-info 'libdir)))
+ 	       (string-join other-flags)
