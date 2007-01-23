@@ -1,16 +1,16 @@
 Summary: A GNU implementation of Scheme for application extensibility.
 Name: guile
 Version: 1.8.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
-Patch2: guile-1.8.0-slib.patch
+Patch2: guile-1.8.1-slib.patch
 Patch4: guile-1.8.1-deplibs.patch
 Patch5: guile-1.8.0-multilib.patch
 License: GPL
 Group: Development/Languages
-Buildroot: %{_tmppath}/%{name}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -75,6 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
 /sbin/install-info  %{_infodir}/guile-tut.info.gz %{_infodir}/dir
+:
 
 %postun -p /sbin/ldconfig
 
@@ -85,11 +86,16 @@ if [ "$1" = 0 ]; then
     /sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
     /sbin/install-info --delete %{_infodir}/guile-tut.info.gz %{_infodir}/dir
 fi
+:
 
 %triggerin -- slib
 ln -sfT ../../slib %{_datadir}/guile/site/slib
 rm -f %{_datadir}/guile/site/slibcat
-%{_bindir}/guile -c "(use-modules (ice-9 slib)) (require 'new-catalog)" || :
+SCHEME_LIBRARY_PATH=%{_datadir}/slib/ \
+	%{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
+	(define (implementation-vicinity) \"%{_datadir}/guile/site/\")
+	(require 'new-catalog)"
+:
 
 %triggerun -- slib
 if [ "$1" = 0 -o "$2" = 0 ]; then
@@ -119,6 +125,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Jan 23 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.1-2
+- support slib-3a4
+- make scriptlets safer (#223701)
+
 * Fri Oct 13 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.1-1
 - update to 1.8.1
 
