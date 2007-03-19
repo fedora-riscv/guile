@@ -1,7 +1,7 @@
-Summary: A GNU implementation of Scheme for application extensibility.
+Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 Version: 1.8.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -29,7 +29,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library.
 Group: Development/Libraries
-Requires: guile = %{epoch}:%{PACKAGE_VERSION} gmp-devel
+Requires: guile = %{epoch}:%{version} gmp-devel
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
@@ -92,9 +92,9 @@ fi
 ln -sfT ../../slib %{_datadir}/guile/site/slib
 rm -f %{_datadir}/guile/site/slibcat
 SCHEME_LIBRARY_PATH=%{_datadir}/slib/ \
-	%{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
-	(define (implementation-vicinity) \"%{_datadir}/guile/site/\")
-	(require 'new-catalog)"
+    %{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
+    (define (implementation-vicinity) \"%{_datadir}/guile/site/\")
+    (require 'new-catalog)"
 :
 
 %triggerun -- slib
@@ -125,6 +125,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Mon Mar 19 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.1-3
+- spec cleanup
+
 * Tue Jan 23 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.1-2
 - support slib-3a4
 - make scriptlets safer (#223701)
@@ -156,7 +159,7 @@ fi
 - move module .so files from devel to main package
 
 * Tue May 09 2006 Bill Nottingham <notting@redhat.com> - 5:1.8.0-2
-- don't package %{_infodir}/dir
+- don't package %%{_infodir}/dir
 
 * Tue May 09 2006 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.0-1
 - update to guile-1.8.0
@@ -285,7 +288,7 @@ fi
 * Tue Dec 03 2002 Phil Knirsch <pknirsch@redhat.com> 1.6.0-1
 - Make it build on x86_64.
 - Integrated and fixed Than's update to 1.6.0.
-- Fixed some things in the %files section.
+- Fixed some things in the %%files section.
 
 * Mon Nov 11 2002 Than Ngo <timp@redhat.com> 1.4.1-2
 - fix to build on s390*/x86_64 -> include libguilereadline.so
@@ -306,7 +309,7 @@ fi
 - Remove qthread from ppc as well.
 
 * Wed Jul 10 2002 Phil Knirsch <pknirsch@redhat.com> 1.4-7
-- Fixed some more %file lib related errors ().
+- Fixed some more %%file lib related errors ().
 
 * Fri Jun 21 2002 Tim Powers <timp@redhat.com> 1.4-6
 - automated rebuild
@@ -352,7 +355,7 @@ fi
 - disable optimization on ia64 (compiler bug) (bug #23186)
 
 * Tue Dec 12 2000 Philipp Knirsch <Philipp.Knirsch@redhat.de>
-- Fixed %files bug #20134 where the /usr/lib/libguilereadline.so didn't get
+- Fixed %%files bug #20134 where the /usr/lib/libguilereadline.so didn't get
   installed for the non devel version.
 
 * Fri Jul 14 2000 Nalin Dahyabhai <nalin@redhat.com>
@@ -384,13 +387,13 @@ fi
 - using the same catalog as umb-scheme makes umb-scheme a prereq
 
 * Thu Feb 17 2000 Florian La Roche <Florian.LaRoche@redhat.com>
-- readline is needed for %post
+- readline is needed for %%post
 
 * Tue Feb  8 2000 Nalin Dahyabhai <nalin@redhat.com>
 - use the same catalog as umb-scheme
 
 * Thu Sep  2 1999 Jeff Johnson <jbj@redhat.com>
-- fix broken %postun
+- fix broken %%postun
 
 * Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
 - auto rebuild in the new build environment (release 6)
@@ -431,20 +434,20 @@ fi
 - added slib link
 
 * Thu Sep 18 1997 Tomasz Koczko <kloczek@idk.com.pl>          (1.2-3)
-- added %attr(-, root, root) for %doc, 
-- in %post, %postun ldconfig runed as parameter "-p",
+- added %%attr(-, root, root) for %%doc, 
+- in %%post, %%postun ldconfig runed as parameter "-p",
 - removed /bin/sh from requires,
-- added %description,
-- changes in %files.
+- added %%description,
+- changes in %%files.
 
 * Fri Jul 11 1997 Tomasz Koczko <kloczek@rudy.mif.pg.gda.pl>  (1.2-2)
 - all rewrited for using Buildroot,
-- added %postun,
+- added %%postun,
 - removed making buid logs,
 - removed "--inclededir", added "--enable-dynamic-linking" to configure
   parameters,
 - added striping shared libs and /usr/bin/guile,
 - added "Requires: /bin/sh" (for guile-snarf) in guile package and
   "Requires: m4" for guile-devel,
-- added macro %{PACKAGE_VERSION} in "Source:" and %files,
-- added %attr macros in %files.
+- added macro %%{PACKAGE_VERSION} in "Source:" and %%files,
+- added %%attr macros in %%files.
