@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
-Version: 1.8.1
-Release: 3%{?dist}
+Version: 1.8.2
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -27,7 +27,7 @@ Install the guile package if you'd like to add extensibility to programs
 that you are developing.
 
 %package devel
-Summary: Libraries and header files for the GUILE extensibility library.
+Summary: Libraries and header files for the GUILE extensibility library
 Group: Development/Libraries
 Requires: guile = %{epoch}:%{version} gmp-devel
 
@@ -65,6 +65,10 @@ rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 
 # Compress large documentation
 bzip2 NEWS
+
+for i in $RPM_BUILD_ROOT%{_infodir}/goops.info; do
+    iconv -f iso8859-1 -t utf-8 < $i > $i.utf8 && mv -f ${i}{.utf8,}
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -125,6 +129,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Jul 17 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.2-1
+- update to 1.8.2
+- remove dot from -devel summary, convert goops.info to UTF-8
+
 * Mon Mar 19 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.1-3
 - spec cleanup
 
