@@ -1,14 +1,14 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 Version: 1.8.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
 Patch2: guile-1.8.1-slib.patch
 Patch4: guile-1.8.1-deplibs.patch
 Patch5: guile-1.8.0-multilib.patch
-License: GPL
+License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
@@ -98,7 +98,7 @@ rm -f %{_datadir}/guile/site/slibcat
 SCHEME_LIBRARY_PATH=%{_datadir}/slib/ \
     %{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
     (define (implementation-vicinity) \"%{_datadir}/guile/site/\")
-    (require 'new-catalog)"
+    (require 'new-catalog)" &> /dev/null
 :
 
 %triggerun -- slib
@@ -129,6 +129,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Aug 22 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.2-2
+- update license tag
+- redirect guile output in triggerin script
+
 * Tue Jul 17 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.2-1
 - update to 1.8.2
 - remove dot from -devel summary, convert goops.info to UTF-8
