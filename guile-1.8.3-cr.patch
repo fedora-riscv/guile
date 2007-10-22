@@ -1,0 +1,17 @@
+Index: guile-core/libguile/read.c
+===================================================================
+RCS file: /sources/guile/guile/guile-core/libguile/read.c,v
+retrieving revision 1.117.2.7
+retrieving revision 1.117.2.8
+diff -u -r1.117.2.7 -r1.117.2.8
+--- guile-core/libguile/read.c	3 Sep 2007 17:04:49 -0000	1.117.2.7
++++ guile-core/libguile/read.c	17 Oct 2007 22:16:44 -0000	1.117.2.8
+@@ -152,7 +152,7 @@
+ /* `isblank' is only in C99.  */
+ #define CHAR_IS_BLANK_(_chr)					\
+   (((_chr) == ' ') || ((_chr) == '\t') || ((_chr) == '\n')	\
+-   || ((_chr) == '\f'))
++   || ((_chr) == '\f') || ((_chr) == '\r'))
+ 
+ #ifdef MSDOS
+ # define CHAR_IS_BLANK(_chr)			\

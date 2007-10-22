@@ -1,11 +1,11 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
-Version: 1.8.2
-Release: 2%{?dist}
+Version: 1.8.3
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
-Patch2: guile-1.8.1-slib.patch
+Patch2: guile-1.8.3-cr.patch
 Patch4: guile-1.8.1-deplibs.patch
 Patch5: guile-1.8.0-multilib.patch
 License: GPLv2+ and LGPLv2+
@@ -43,7 +43,7 @@ install the guile package.
 %prep
 %setup -q
 %patch1 -p1 -b .rpath
-%patch2 -p1 -b .slib
+%patch2 -p1 -b .cr
 %patch4 -p1 -b .deplibs
 %patch5 -p1 -b .multilib
 
@@ -129,6 +129,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Mon Oct 22 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.3-1
+- update to 1.8.3
+
 * Wed Aug 22 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.2-2
 - update license tag
 - redirect guile output in triggerin script
