@@ -1,7 +1,8 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
+%define mver 1.8
 Version: 1.8.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -70,6 +71,9 @@ for i in $RPM_BUILD_ROOT%{_infodir}/goops.info; do
     iconv -f iso8859-1 -t utf-8 < $i > $i.utf8 && mv -f ${i}{.utf8,}
 done
 
+touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
+ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -93,17 +97,29 @@ fi
 :
 
 %triggerin -- slib
-ln -sfT ../../slib %{_datadir}/guile/site/slib
-rm -f %{_datadir}/guile/site/slibcat
-SCHEME_LIBRARY_PATH=%{_datadir}/slib/ \
-    %{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
-    (define (implementation-vicinity) \"%{_datadir}/guile/site/\")
-    (require 'new-catalog)" &> /dev/null
+# Remove files created in guile < 1.8.3-2
+rm -f %{_datadir}/guile/site/slib{,cat}
+
+ln -sfT ../../slib %{_datadir}/guile/%{mver}/slib
+rm -f %{_datadir}/guile/%{mver}/slibcat
+export SCHEME_LIBRARY_PATH=%{_datadir}/slib/
+umask 0022
+
+# Build SLIB catalog
+for pre in \
+    "(use-modules (ice-9 slib))" \
+    "(load \"%{_datadir}/slib/guile.init\")"
+do
+    %{_bindir}/guile -c "$pre
+        (set! implementation-vicinity (lambda () \"%{_datadir}/guile/%{mver}/\"))
+        (require 'new-catalog)" &> /dev/null && break
+    rm -f %{_datadir}/guile/%{mver}/slibcat
+done
 :
 
 %triggerun -- slib
-if [ "$1" = 0 -o "$2" = 0 ]; then
-    rm -f %{_datadir}/guile/site/slib{,cat}
+if [ "$2" = 0 ]; then
+    rm -f %{_datadir}/guile/%{mver}/slib{,cat}
 fi
 
 %files
@@ -115,7 +131,17 @@ fi
 %{_libdir}/libguile*.so.*
 %{_libdir}/libguilereadline-*.so
 %{_libdir}/libguile-srfi-srfi-*.so
-%{_datadir}/guile
+%dir %{_datadir}/guile
+%dir %{_datadir}/guile/%{mver}
+%{_datadir}/guile/%{mver}/ice-9
+%{_datadir}/guile/%{mver}/lang
+%{_datadir}/guile/%{mver}/oop
+%{_datadir}/guile/%{mver}/scripts
+%{_datadir}/guile/%{mver}/srfi
+%{_datadir}/guile/%{mver}/guile-procedures.txt
+%ghost %{_datadir}/guile/%{mver}/slibcat
+%ghost %{_datadir}/guile/%{mver}/slib
+%dir %{_datadir}/guile/site
 %{_infodir}/*
 
 %files devel
@@ -129,6 +155,11 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Jan 09 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.3-2
+- support slib-3a5
+- move slibcat and slib symlink out of site directory
+- set umask in scriptlet (#242936)
+
 * Mon Oct 22 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.3-1
 - update to 1.8.3
 
