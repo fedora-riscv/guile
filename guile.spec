@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.0-rpath.patch
@@ -155,6 +155,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 5:1.8.3-3
+- Autorebuild for GCC 4.3
+
 * Wed Jan 09 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.3-2
 - support slib-3a5
 - move slibcat and slib symlink out of site directory
