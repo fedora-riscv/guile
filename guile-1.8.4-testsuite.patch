@@ -1,0 +1,21 @@
+diff -up guile-1.8.4/test-suite/tests/popen.test.testsuite guile-1.8.4/test-suite/tests/popen.test
+--- guile-1.8.4/test-suite/tests/popen.test.testsuite	2006-08-25 03:21:39.000000000 +0200
++++ guile-1.8.4/test-suite/tests/popen.test	2008-02-21 10:24:09.000000000 +0100
+@@ -82,7 +82,7 @@
+ 	   (port (with-error-to-port (cdr pair)
+ 		   (lambda ()
+ 		     (open-input-pipe
+-		      "exec 1>/dev/null; echo closed 1>&2; exec 2>/dev/null; sleep 999")))))
++		      "exec 1>/dev/null; echo closed 1>&2; exec 2>/dev/null; sleep 3")))))
+       (close-port (cdr pair))   ;; write side
+       (and (char? (read-char (car pair))) ;; wait for child to do its thing
+ 	   (char-ready? port)
+@@ -132,7 +132,7 @@
+ 	      (port (with-error-to-port (cdr pair)
+ 		      (lambda ()
+ 			(open-output-pipe
+-			 "exec 0</dev/null; echo closed 1>&2; exec 2>/dev/null; sleep 999")))))
++			 "exec 0</dev/null; echo closed 1>&2; exec 2>/dev/null; sleep 3")))))
+ 	 (close-port (cdr pair))   ;; write side
+ 	 (and (char? (read-char (car pair))) ;; wait for child to do its thing
+ 	      (catch 'system-error

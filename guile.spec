@@ -1,14 +1,13 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
-Version: 1.8.3
-Release: 3%{?dist}
+Version: 1.8.4
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
-Patch1: guile-1.8.0-rpath.patch
-Patch2: guile-1.8.3-cr.patch
+Patch1: guile-1.8.4-multilib.patch
+Patch2: guile-1.8.4-testsuite.patch
 Patch4: guile-1.8.1-deplibs.patch
-Patch5: guile-1.8.0-multilib.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -43,14 +42,17 @@ install the guile package.
 
 %prep
 %setup -q
-%patch1 -p1 -b .rpath
-%patch2 -p1 -b .cr
+%patch1 -p1 -b .multilib
+%patch2 -p1 -b .testsuite
 %patch4 -p1 -b .deplibs
-%patch5 -p1 -b .multilib
 
 %build
 
 %configure --disable-static --disable-error-on-warning
+
+# Remove RPATH
+sed -i 's|" $sys_lib_dlsearch_path "|" $sys_lib_dlsearch_path %{_libdir} "|' \
+    {,guile-readline/}libtool
 
 make %{?_smp_mflags}
 
@@ -73,6 +75,9 @@ done
 
 touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
+
+%check
+make %{?_smp_mflags} check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -155,6 +160,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Feb 21 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.4-1
+- update to 1.8.4
+- add %%check
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 5:1.8.3-3
 - Autorebuild for GCC 4.3
 
