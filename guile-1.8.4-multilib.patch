@@ -1,6 +1,7 @@
---- guile-1.8.0/libguile/Makefile.in.multilib	2006-05-23 14:28:20.000000000 +0200
-+++ guile-1.8.0/libguile/Makefile.in	2006-05-23 15:52:05.000000000 +0200
-@@ -1622,6 +1622,11 @@
+diff -up guile-1.8.4/libguile/Makefile.in.multilib guile-1.8.4/libguile/Makefile.in
+--- guile-1.8.4/libguile/Makefile.in.multilib	2008-02-20 19:34:05.000000000 +0100
++++ guile-1.8.4/libguile/Makefile.in	2008-02-20 19:34:05.000000000 +0100
+@@ -1630,6 +1630,11 @@ install-nodist_modincludeHEADERS: $(nodi
  	  f=$(am__strip_dir) \
  	  echo " $(nodist_modincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(modincludedir)/$$f'"; \
  	  $(nodist_modincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(modincludedir)/$$f"; \
@@ -12,8 +13,9 @@
  	done
  
  uninstall-nodist_modincludeHEADERS:
---- guile-1.8.0/libguile/guile-snarf.in.multilib	2006-02-12 14:29:12.000000000 +0100
-+++ guile-1.8.0/libguile/guile-snarf.in	2006-05-23 15:53:23.000000000 +0200
+diff -up guile-1.8.4/libguile/guile-snarf.in.multilib guile-1.8.4/libguile/guile-snarf.in
+--- guile-1.8.4/libguile/guile-snarf.in.multilib	2008-02-12 15:04:09.000000000 +0100
++++ guile-1.8.4/libguile/guile-snarf.in	2008-02-20 19:40:21.000000000 +0100
 @@ -39,7 +39,6 @@
  #   #endif
  # 
@@ -22,17 +24,18 @@
  
  # Code:
  
-@@ -72,7 +71,7 @@
- tempdir="/tmp/snarf.$$"
+@@ -75,7 +74,7 @@ tempdir="$TMPDIR/guile-snarf.$$"
  (umask 077 && mkdir $tempdir) || exit 1
  temp="$tempdir/tmp"
+ 
 -if [ x"$CPP" = x ] ; then cpp="@CPP@" ; else cpp="$CPP" ; fi
 +if [ x"$CPP" = x ] ; then cpp="gcc -E" ; else cpp="$CPP" ; fi
  
  trap "rm -rf $tempdir" 0 1 2 15
  
---- guile-1.8.0/libguile/scmconfig.h.mlib.multilib	1970-01-01 01:00:00.000000000 +0100
-+++ guile-1.8.0/libguile/scmconfig.h.mlib	2006-05-23 15:51:30.000000000 +0200
+diff -up /dev/null guile-1.8.4/libguile/scmconfig.h.mlib
+--- /dev/null	2007-12-22 10:41:34.485021827 +0100
++++ guile-1.8.4/libguile/scmconfig.h.mlib	2008-02-20 19:34:05.000000000 +0100
 @@ -0,0 +1,6 @@
 +#include <bits/wordsize.h>
 +#if __WORDSIZE == 32

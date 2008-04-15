@@ -1,13 +1,13 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
-Version: 1.8.2
-Release: 2%{?dist}
+%define mver 1.8
+Version: 1.8.4
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
-Patch1: guile-1.8.0-rpath.patch
-Patch2: guile-1.8.1-slib.patch
+Patch1: guile-1.8.4-multilib.patch
+Patch2: guile-1.8.4-testsuite.patch
 Patch4: guile-1.8.1-deplibs.patch
-Patch5: guile-1.8.0-multilib.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -42,14 +42,17 @@ install the guile package.
 
 %prep
 %setup -q
-%patch1 -p1 -b .rpath
-%patch2 -p1 -b .slib
+%patch1 -p1 -b .multilib
+%patch2 -p1 -b .testsuite
 %patch4 -p1 -b .deplibs
-%patch5 -p1 -b .multilib
 
 %build
 
 %configure --disable-static --disable-error-on-warning
+
+# Remove RPATH
+sed -i 's|" $sys_lib_dlsearch_path "|" $sys_lib_dlsearch_path %{_libdir} "|' \
+    {,guile-readline/}libtool
 
 make %{?_smp_mflags}
 
@@ -69,6 +72,12 @@ bzip2 NEWS
 for i in $RPM_BUILD_ROOT%{_infodir}/goops.info; do
     iconv -f iso8859-1 -t utf-8 < $i > $i.utf8 && mv -f ${i}{.utf8,}
 done
+
+touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
+ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
+
+%check
+make %{?_smp_mflags} check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -93,17 +102,29 @@ fi
 :
 
 %triggerin -- slib
-ln -sfT ../../slib %{_datadir}/guile/site/slib
-rm -f %{_datadir}/guile/site/slibcat
-SCHEME_LIBRARY_PATH=%{_datadir}/slib/ \
-    %{_bindir}/guile -l %{_datadir}/slib/guile.init -c "\
-    (define (implementation-vicinity) \"%{_datadir}/guile/site/\")
-    (require 'new-catalog)" &> /dev/null
+# Remove files created in guile < 1.8.3-2
+rm -f %{_datadir}/guile/site/slib{,cat}
+
+ln -sfT ../../slib %{_datadir}/guile/%{mver}/slib
+rm -f %{_datadir}/guile/%{mver}/slibcat
+export SCHEME_LIBRARY_PATH=%{_datadir}/slib/
+umask 0022
+
+# Build SLIB catalog
+for pre in \
+    "(use-modules (ice-9 slib))" \
+    "(load \"%{_datadir}/slib/guile.init\")"
+do
+    %{_bindir}/guile -c "$pre
+        (set! implementation-vicinity (lambda () \"%{_datadir}/guile/%{mver}/\"))
+        (require 'new-catalog)" &> /dev/null && break
+    rm -f %{_datadir}/guile/%{mver}/slibcat
+done
 :
 
 %triggerun -- slib
-if [ "$1" = 0 -o "$2" = 0 ]; then
-    rm -f %{_datadir}/guile/site/slib{,cat}
+if [ "$2" = 0 ]; then
+    rm -f %{_datadir}/guile/%{mver}/slib{,cat}
 fi
 
 %files
@@ -115,7 +136,17 @@ fi
 %{_libdir}/libguile*.so.*
 %{_libdir}/libguilereadline-*.so
 %{_libdir}/libguile-srfi-srfi-*.so
-%{_datadir}/guile
+%dir %{_datadir}/guile
+%dir %{_datadir}/guile/%{mver}
+%{_datadir}/guile/%{mver}/ice-9
+%{_datadir}/guile/%{mver}/lang
+%{_datadir}/guile/%{mver}/oop
+%{_datadir}/guile/%{mver}/scripts
+%{_datadir}/guile/%{mver}/srfi
+%{_datadir}/guile/%{mver}/guile-procedures.txt
+%ghost %{_datadir}/guile/%{mver}/slibcat
+%ghost %{_datadir}/guile/%{mver}/slib
+%dir %{_datadir}/guile/site
 %{_infodir}/*
 
 %files devel
@@ -129,6 +160,13 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Apr 15 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.4-1
+- update to 1.8.4
+- add %%check
+- support slib-3a5
+- move slibcat and slib symlink out of site directory
+- set umask in scriptlet (#242936)
+
 * Wed Aug 22 2007 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.2-2
 - update license tag
 - redirect guile output in triggerin script
