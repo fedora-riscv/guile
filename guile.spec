@@ -1,12 +1,13 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
-Version: 1.8.4
+Version: 1.8.5
 Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
 Patch2: guile-1.8.4-testsuite.patch
+Patch3: guile-1.8.5-conts.patch
 Patch4: guile-1.8.1-deplibs.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
@@ -30,6 +31,7 @@ that you are developing.
 Summary: Libraries and header files for the GUILE extensibility library
 Group: Development/Libraries
 Requires: guile = %{epoch}:%{version} gmp-devel
+Requires: pkgconfig
 
 %description devel
 The guile-devel package includes the libraries, header files, etc.,
@@ -44,6 +46,7 @@ install the guile package.
 %setup -q
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .testsuite
+%patch3 -p1 -b .conts
 %patch4 -p1 -b .deplibs
 
 %build
@@ -108,7 +111,6 @@ rm -f %{_datadir}/guile/site/slib{,cat}
 ln -sfT ../../slib %{_datadir}/guile/%{mver}/slib
 rm -f %{_datadir}/guile/%{mver}/slibcat
 export SCHEME_LIBRARY_PATH=%{_datadir}/slib/
-umask 0022
 
 # Build SLIB catalog
 for pre in \
@@ -129,8 +131,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README
-%doc SNAPSHOTS ANON-CVS THANKS
+%doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README THANKS
 %{_bindir}/guile
 %{_bindir}/guile-tools
 %{_libdir}/libguile*.so.*
@@ -155,11 +156,17 @@ fi
 %{_bindir}/guile-snarf
 %{_datadir}/aclocal/*
 %{_libdir}/libguile.so
+%{_libdir}/pkgconfig/*.pc
 %{_includedir}/guile
 %{_includedir}/libguile
 %{_includedir}/libguile.h
 
 %changelog
+* Tue May 13 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.5-1
+- update to 1.8.5
+- fix continuations on ia64
+- remove umask setting from scriptlet, rpm sets it now
+
 * Thu Feb 21 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.4-1
 - update to 1.8.4
 - add %%check
