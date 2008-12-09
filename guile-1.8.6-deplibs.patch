@@ -1,6 +1,23 @@
---- guile-1.8.1/libguile/Makefile.in.deplibs	2006-10-07 05:54:33.000000000 +0200
-+++ guile-1.8.1/libguile/Makefile.in	2006-10-09 10:54:38.000000000 +0200
-@@ -441,7 +441,7 @@
+diff -up guile-1.8.6/guile-config/guile-config.in.deplibs guile-1.8.6/guile-config/guile-config.in
+--- guile-1.8.6/guile-config/guile-config.in.deplibs	2008-12-04 19:30:41.000000000 +0100
++++ guile-1.8.6/guile-config/guile-config.in	2008-12-09 12:17:48.000000000 +0100
+@@ -152,10 +152,10 @@
+ 	      (list
+ 	       (get-build-info 'CFLAGS)
+                (if (or (string=? libdir "/usr/lib")
+-                       (string=? libdir "/usr/lib/"))
++                       (string=? libdir "/usr/lib64"))
+ 		   ""
+ 		   (string-append "-L" (get-build-info 'libdir)))
+-               "-lguile -lltdl"
++               "-lguile"
+ 	       (string-join other-flags)
+ 
+ 	       )))
+diff -up guile-1.8.6/libguile/Makefile.in.deplibs guile-1.8.6/libguile/Makefile.in
+--- guile-1.8.6/libguile/Makefile.in.deplibs	2008-12-09 12:15:36.000000000 +0100
++++ guile-1.8.6/libguile/Makefile.in	2008-12-09 12:15:36.000000000 +0100
+@@ -456,7 +456,7 @@ noinst_HEADERS = convert.i.c					\
  
  libguile_la_DEPENDENCIES = @LIBLOBJS@
  libguile_la_LIBADD = @LIBLOBJS@
@@ -9,7 +26,7 @@
  
  # These are headers visible as <guile/mumble.h>
  pkginclude_HEADERS = gh.h
-@@ -1908,8 +1908,8 @@
+@@ -2026,8 +2026,8 @@ libpath.h: $(srcdir)/Makefile.in  $(top_
  	@echo '#define SCM_LIBRARY_DIR "$(pkgdatadir)/$(GUILE_EFFECTIVE_VERSION)"'>>libpath.tmp
  	@echo '#define SCM_SITE_DIR "$(pkgdatadir)/site"' >> libpath.tmp
  	@echo '#define SCM_BUILD_INFO { \' >> libpath.tmp
@@ -20,7 +37,7 @@
  	@echo '	{ "prefix",	   "@prefix@" }, \' >> libpath.tmp
  	@echo '	{ "exec_prefix",   "@exec_prefix@" }, \' >> libpath.tmp
  	@echo '	{ "bindir",	   "@bindir@" }, \' >> libpath.tmp
-@@ -1930,7 +1930,7 @@
+@@ -2048,7 +2048,7 @@ libpath.h: $(srcdir)/Makefile.in  $(top_
  	@echo '	{ "guileversion", "@GUILE_VERSION@" }, \' >> libpath.tmp
  	@echo '	{ "libguileinterface", "@LIBGUILE_INTERFACE@" }, \' \
  		>> libpath.tmp
@@ -29,17 +46,3 @@
  	@echo '	{ "CFLAGS",	   "@GUILE_CFLAGS@" }, \' >> libpath.tmp
  	@echo '	{ "buildstamp",    "'"`date`"'" }, \' >> libpath.tmp
  	@echo '}' >> libpath.tmp
---- guile-1.8.1/guile-config/guile-config.in.deplibs	2006-09-20 02:19:02.000000000 +0200
-+++ guile-1.8.1/guile-config/guile-config.in	2006-10-09 11:00:02.000000000 +0200
-@@ -151,9 +151,9 @@
-     (display (string-join
- 	      (list
- 	       (get-build-info 'CFLAGS)
--	       "-lguile -lltdl" 
-+	       "-lguile" 
-                (if (or (string=? libdir "/usr/lib")
--                       (string=? libdir "/usr/lib/"))
-+                       (string=? libdir "/usr/lib64"))
- 		   ""
- 		   (string-append "-L" (get-build-info 'libdir)))
- 	       (string-join other-flags)

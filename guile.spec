@@ -1,15 +1,13 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
-Version: 1.8.5
-Release: 2%{?dist}
+Version: 1.8.6
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
 Patch2: guile-1.8.4-testsuite.patch
-Patch3: guile-1.8.5-conts.patch
-Patch4: guile-1.8.1-deplibs.patch
-Patch5: guile-1.8.5-macrodir.patch
+Patch4: guile-1.8.6-deplibs.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -32,7 +30,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library
 Group: Development/Libraries
-Requires: guile = %{epoch}:%{version} gmp-devel
+Requires: guile = %{epoch}:%{version}-%{release} gmp-devel
 Requires: pkgconfig
 
 %description devel
@@ -47,13 +45,8 @@ install the guile package.
 %prep
 %setup -q
 
-%patch5 -p1 -b .macrodir
-autoreconf -i -f
-sed -i '/define _GNU_SOURCE/d' config.h.in
-
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .testsuite
-%patch3 -p1 -b .conts
 %patch4 -p1 -b .deplibs
 
 %build
@@ -156,6 +149,7 @@ fi
 %ghost %{_datadir}/guile/%{mver}/slib
 %dir %{_datadir}/guile/site
 %{_infodir}/*
+%{_mandir}/man1/guile.1*
 
 %files devel
 %defattr(-,root,root,-)
@@ -169,6 +163,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Dec 09 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.6-1
+- update to 1.8.6
+
 * Wed Nov 19 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.5-2
 - fix building with new libtool
 
