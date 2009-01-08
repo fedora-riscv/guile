@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
@@ -12,7 +12,7 @@ License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
-Buildrequires: gettext-devel
+BuildRequires: gettext-devel emacs
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Requires: coreutils
@@ -148,6 +148,8 @@ fi
 %ghost %{_datadir}/guile/%{mver}/slibcat
 %ghost %{_datadir}/guile/%{mver}/slib
 %dir %{_datadir}/guile/site
+%dir %{_datadir}/emacs/site-lisp
+%{_datadir}/emacs/site-lisp/*.el
 %{_infodir}/*
 %{_mandir}/man1/guile.1*
 
@@ -163,6 +165,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Jan 08 2009 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.6-2
+- include Emacs support (#478468)
+
 * Tue Dec 09 2008 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.6-1
 - update to 1.8.6
 
