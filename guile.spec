@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
@@ -165,6 +165,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Thu Jan 08 2009 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.6-2
 - include Emacs support (#478468)
 
