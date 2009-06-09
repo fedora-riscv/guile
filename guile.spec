@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.6
-Release: 3%{?dist}
+Release: 4%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
@@ -51,6 +51,14 @@ install the guile package.
 
 %build
 
+%ifarch sparcv9
+CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
+CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
+
+# use -O0 on sparcv9
+CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O0|g" `
+%endif
+
 %configure --disable-static --disable-error-on-warning
 
 # Remove RPATH
@@ -80,6 +88,13 @@ touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
 %check
+%ifarch sparcv9
+CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
+CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
+
+# use -O0 on sparcv9
+CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O0|g" `
+%endif
 make %{?_smp_mflags} check
 
 %clean
@@ -165,6 +180,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Jun 09 2009 Dennis Gilmore <dennis@ausil.us> - 5:1.8.6-4
+- build with -O0 on sparcv9 otherwise test suite hangs
+
 * Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
