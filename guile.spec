@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.6
-Release: 4%{?dist}
+Release: 5%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.4-multilib.patch
@@ -51,7 +51,7 @@ install the guile package.
 
 %build
 
-%ifarch sparcv9
+%ifarch %{sparc}
 CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
 CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
 
@@ -88,7 +88,7 @@ touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
 %check
-%ifarch sparcv9
+%ifarch %{sparc}
 CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
 CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
 
@@ -180,6 +180,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Jun 09 2009 Dennis Gilmore <dennis@ausil.us> - 5:1.8.6-5
+- build with -O0 on all sparc arches
+
 * Tue Jun 09 2009 Dennis Gilmore <dennis@ausil.us> - 5:1.8.6-4
 - build with -O0 on sparcv9 otherwise test suite hangs
 
