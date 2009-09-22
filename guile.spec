@@ -4,11 +4,12 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
 Patch2: guile-1.8.7-testsuite.patch
+Patch3: guile-1.8.7-ia64jmp.patch
 Patch4: guile-1.8.6-deplibs.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
@@ -50,6 +51,7 @@ install the guile package.
 
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .testsuite
+%patch3 -p1 -b .ia64jmp
 %patch4 -p1 -b .deplibs
 
 %build
@@ -105,20 +107,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
-/sbin/install-info  %{_infodir}/guile.info.gz %{_infodir}/dir
-/sbin/install-info  %{_infodir}/r5rs.info.gz %{_infodir}/dir
-/sbin/install-info  %{_infodir}/goops.info.gz %{_infodir}/dir
-/sbin/install-info  %{_infodir}/guile-tut.info.gz %{_infodir}/dir
+for i in guile r5rs goops guile-tut; do
+    /sbin/install-info %{_infodir}/$i.info.gz %{_infodir}/dir &> /dev/null
+done
 :
 
 %postun -p /sbin/ldconfig
 
 %preun
 if [ "$1" = 0 ]; then
-    /sbin/install-info --delete %{_infodir}/guile.info.gz %{_infodir}/dir
-    /sbin/install-info --delete %{_infodir}/r5rs.info.gz %{_infodir}/dir
-    /sbin/install-info --delete %{_infodir}/goops.info.gz %{_infodir}/dir
-    /sbin/install-info --delete %{_infodir}/guile-tut.info.gz %{_infodir}/dir
+    for i in guile r5rs goops guile-tut; do
+        /sbin/install-info --delete %{_infodir}/$i.info.gz \
+            %{_infodir}/dir &> /dev/null
+    done
 fi
 :
 
@@ -185,6 +186,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Sep 22 2009 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-3
+- suppress install-info errors (#515977)
+- avoid clash with system setjmp/longjmp on IA64
+
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
