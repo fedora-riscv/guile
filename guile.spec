@@ -4,13 +4,14 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
 Patch2: guile-1.8.7-testsuite.patch
 Patch3: guile-1.8.7-ia64jmp.patch
 Patch4: guile-1.8.6-deplibs.patch
+Patch5: guile-1.8.7-linemarkers.patch
 License: GPLv2+ and LGPLv2+
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -53,6 +54,7 @@ install the guile package.
 %patch2 -p1 -b .testsuite
 %patch3 -p1 -b .ia64jmp
 %patch4 -p1 -b .deplibs
+%patch5 -p1 -b .linemarkers
 
 %build
 
@@ -186,6 +188,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Nov 19 2009 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-4
+- fix building with new cpp (#538707)
+
 * Tue Sep 22 2009 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-3
 - suppress install-info errors (#515977)
 - avoid clash with system setjmp/longjmp on IA64
