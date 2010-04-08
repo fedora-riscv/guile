@@ -4,7 +4,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -13,7 +13,7 @@ Patch3: guile-1.8.7-ia64jmp.patch
 Patch4: guile-1.8.6-deplibs.patch
 Patch5: guile-1.8.7-linemarkers.patch
 Patch6: guile-1.8.7-testsuite2.patch
-License: GPLv2+ and LGPLv2+
+License: GPLv2+ and LGPLv2+ and GFDL and OFSFDL
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
@@ -190,6 +190,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Apr 08 2010 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-6
+- fix license tag (#225877)
+
 * Fri Jan 15 2010 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-5
 - fix test suite to work with new libtool (#555479)
 
