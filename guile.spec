@@ -3,16 +3,13 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
-Version: 1.8.7
-Release: 6%{?dist}
+Version: 1.8.8
+Release: 1%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
 Patch2: guile-1.8.7-testsuite.patch
-Patch3: guile-1.8.7-ia64jmp.patch
 Patch4: guile-1.8.6-deplibs.patch
-Patch5: guile-1.8.7-linemarkers.patch
-Patch6: guile-1.8.7-testsuite2.patch
 License: GPLv2+ and LGPLv2+ and GFDL and OFSFDL
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -53,20 +50,9 @@ install the guile package.
 
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .testsuite
-%patch3 -p1 -b .ia64jmp
 %patch4 -p1 -b .deplibs
-%patch5 -p1 -b .linemarkers
-%patch6 -p1 -b .testsuite2
 
 %build
-
-%ifarch sparcv9
-CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
-CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
-
-# use -O0 on sparcv9
-CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O0|g" `
-%endif
 
 %configure --disable-static --disable-error-on-warning
 
@@ -97,13 +83,6 @@ touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
 %check
-%ifarch sparcv9
-CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS
-CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS
-
-# use -O0 on sparcv9
-CFLAGS=`echo $CFLAGS| sed -e "s|-O2|-O0|g" `
-%endif
 make %{?_smp_mflags} check
 
 %clean
@@ -190,6 +169,10 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Tue Dec 14 2010 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-1
+- update to 1.8.8
+- try enabling optimizations on sparc again
+
 * Thu Apr 08 2010 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.7-6
 - fix license tag (#225877)
 
