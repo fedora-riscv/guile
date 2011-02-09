@@ -4,7 +4,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -169,6 +169,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Tue Dec 14 2010 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-1
 - update to 1.8.8
 - try enabling optimizations on sparc again
