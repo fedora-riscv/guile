@@ -4,12 +4,12 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
 Patch2: guile-1.8.7-testsuite.patch
-Patch4: guile-1.8.6-deplibs.patch
+Patch4: guile-1.8.8-deplibs.patch
 License: GPLv2+ and LGPLv2+ and GFDL and OFSFDL
 Group: Development/Languages
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -169,6 +169,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Thu Jun 16 2011 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-3
+- make some libs private in pkgconfig file (#712990)
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
