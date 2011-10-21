@@ -4,7 +4,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 1.8
 Version: 1.8.8
-Release: 3%{?dist}.1
+Release: 3%{?dist}.2
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -169,6 +169,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Fri Oct 21 2011 Marcela Mašláňová <mmaslano@redhat.com> - 5:1.8.8-3.2
+- rebuild with new gmp without compat lib
+
 * Tue Oct 11 2011 Peter Schiffer <pschiffe@redhat.com> - 5:1.8.8-3.1
 - rebuild with new gmp
 
