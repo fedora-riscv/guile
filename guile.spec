@@ -2,9 +2,9 @@
 
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
-%define mver 1.8
+%global mver 1.8
 Version: 1.8.8
-Release: 5%{?dist}.2
+Release: 6%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -12,7 +12,6 @@ Patch2: guile-1.8.7-testsuite.patch
 Patch4: guile-1.8.8-deplibs.patch
 License: GPLv2+ and LGPLv2+ and GFDL and OFSFDL
 Group: Development/Languages
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel
 %{?with_emacs:BuildRequires: emacs}
@@ -63,8 +62,6 @@ sed -i 's|" $sys_lib_dlsearch_path "|" $sys_lib_dlsearch_path %{_libdir} "|' \
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=$RPM_BUILD_ROOT install
 
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
@@ -84,9 +81,6 @@ ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
 %check
 make %{?_smp_mflags} check
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
@@ -132,7 +126,6 @@ if [ "$2" = 0 ]; then
 fi
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README THANKS
 %{_bindir}/guile
 %{_bindir}/guile-tools
@@ -158,7 +151,6 @@ fi
 %{_mandir}/man1/guile.1*
 
 %files devel
-%defattr(-,root,root,-)
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
 %{_datadir}/aclocal/*
@@ -169,6 +161,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Mon Nov 12 2012 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-6
+- remove obsolete macros
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.8.8-5.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
