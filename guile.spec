@@ -1,24 +1,18 @@
-%bcond_without emacs
-
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
-%global mver 1.8
-Version: 1.8.8
-Release: 6%{?dist}
+%define mver 2.0
+Version: 2.0.7
+Release: 1%{?dist}
+Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
-Patch1: guile-1.8.7-multilib.patch
-Patch2: guile-1.8.7-testsuite.patch
-Patch4: guile-1.8.8-deplibs.patch
-License: GPLv2+ and LGPLv2+ and GFDL and OFSFDL
+License: LGPLv3+
 Group: Development/Languages
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
-BuildRequires: gettext-devel
-%{?with_emacs:BuildRequires: emacs}
+BuildRequires: gettext-devel libunistring-devel libffi-devel gc-devel
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Requires: coreutils
-Epoch: 5
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -32,7 +26,7 @@ that you are developing.
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library
 Group: Development/Libraries
-Requires: guile = %{epoch}:%{version}-%{release} gmp-devel
+Requires: guile%{?_isa} = %{epoch}:%{version}-%{release} gmp-devel gc-devel
 Requires: pkgconfig
 
 %description devel
@@ -45,11 +39,7 @@ applications that will be linked to GUILE.  You'll also need to
 install the guile package.
 
 %prep
-%setup -q
-
-%patch1 -p1 -b .multilib
-%patch2 -p1 -b .testsuite
-%patch4 -p1 -b .deplibs
+%setup -q -n guile-%version
 
 %build
 
@@ -57,14 +47,14 @@ install the guile package.
 
 # Remove RPATH
 sed -i 's|" $sys_lib_dlsearch_path "|" $sys_lib_dlsearch_path %{_libdir} "|' \
-    {,guile-readline/}libtool
+    libtool
 
 make %{?_smp_mflags}
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 
-mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site/%{mver}
 
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*.la
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
@@ -79,25 +69,42 @@ done
 touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
+# Necessary guile 2 renaming
+# rename binaries
+mv $RPM_BUILD_ROOT%{_bindir}/guile{,2}
+mv $RPM_BUILD_ROOT%{_bindir}/guile{,2}-tools
+# rename man and info pages
+mv $RPM_BUILD_ROOT%{_mandir}/man1/guile{,2}.1
+infopath=$RPM_BUILD_ROOT%{_infodir}
+sed -i -e 's/guile\.info/guile2\.info/' ${infopath}/guile.info
+for i in ${infopath}/guile*; do
+	newname=$(echo ${i} | sed -e 's/guile\./guile2\./')
+	mv ${i} ${newname}
+done
+mv $RPM_BUILD_ROOT%{_infodir}/r5rs{,2}.info
 %check
 make %{?_smp_mflags} check
 
 %post
 /sbin/ldconfig
-for i in guile r5rs goops guile-tut; do
-    /sbin/install-info %{_infodir}/$i.info.gz %{_infodir}/dir &> /dev/null
+for i in guile r5rs; do
+    /sbin/install-info %{_infodir}/${i}2.info.gz %{_infodir}/dir &> /dev/null
 done
+ln -fs %{_bindir}/guile2 %{_bindir}/guile
+ln -fs %{_bindir}/guile2-tools %{_bindir}/guile-tools
 :
 
 %postun -p /sbin/ldconfig
 
 %preun
 if [ "$1" = 0 ]; then
-    for i in guile r5rs goops guile-tut; do
-        /sbin/install-info --delete %{_infodir}/$i.info.gz \
+    for i in guile r5rs; do
+        /sbin/install-info --delete %{_infodir}/${i}2.info.gz \
             %{_infodir}/dir &> /dev/null
     done
 fi
+rm -f %{_bindir}/guile
+rm -f %{_bindir}/guile-tools
 :
 
 %triggerin -- slib
@@ -127,40 +134,47 @@ fi
 
 %files
 %doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README THANKS
-%{_bindir}/guile
-%{_bindir}/guile-tools
+%{_bindir}/guile2
+%{_bindir}/guile2-tools
+%{_bindir}/guild
+%ghost %{_bindir}/guile
+%ghost %{_bindir}/guile-tools
 %{_libdir}/libguile*.so.*
 %{_libdir}/libguilereadline-*.so
-%{_libdir}/libguile-srfi-srfi-*.so
+%{_libdir}/guile
 %dir %{_datadir}/guile
 %dir %{_datadir}/guile/%{mver}
 %{_datadir}/guile/%{mver}/ice-9
-%{_datadir}/guile/%{mver}/lang
+%{_datadir}/guile/%{mver}/language
 %{_datadir}/guile/%{mver}/oop
+%{_datadir}/guile/%{mver}/rnrs
 %{_datadir}/guile/%{mver}/scripts
 %{_datadir}/guile/%{mver}/srfi
+%{_datadir}/guile/%{mver}/sxml
+%{_datadir}/guile/%{mver}/system
+%{_datadir}/guile/%{mver}/texinfo
+%{_datadir}/guile/%{mver}/web
 %{_datadir}/guile/%{mver}/guile-procedures.txt
+%{_datadir}/guile/%{mver}/*.scm
 %ghost %{_datadir}/guile/%{mver}/slibcat
 %ghost %{_datadir}/guile/%{mver}/slib
 %dir %{_datadir}/guile/site
-%if %{with emacs}
-%dir %{_datadir}/emacs/site-lisp
-%{_datadir}/emacs/site-lisp/*.el
-%endif
+%dir %{_datadir}/guile/site/%{mver}
 %{_infodir}/*
-%{_mandir}/man1/guile.1*
+%{_mandir}/man1/guile2.1*
 
 %files devel
 %{_bindir}/guile-config
 %{_bindir}/guile-snarf
 %{_datadir}/aclocal/*
-%{_libdir}/libguile.so
+%{_libdir}/libguile-%{mver}.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/guile
-%{_includedir}/libguile
-%{_includedir}/libguile.h
 
 %changelog
+* Fri Jan 25 2013 Jan Synáček <jsynacek@redhat.com> - 2.0.7-1
+- Update to 2.0.7 (#678238)
+
 * Mon Nov 12 2012 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-6
 - remove obsolete macros
 
