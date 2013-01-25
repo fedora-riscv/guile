@@ -173,6 +173,9 @@ fi
 
 %changelog
 * Fri Jan 25 2013 Jan Synáček <jsynacek@redhat.com> - 2.0.7-1
+- Add forgotten sources
+
+* Fri Jan 25 2013 Jan Synáček <jsynacek@redhat.com> - 2.0.7-1
 - Update to 2.0.7 (#678238)
 
 * Mon Nov 12 2012 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.8.8-6
