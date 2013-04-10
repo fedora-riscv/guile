@@ -538,7 +538,7 @@ fi
 * Thu Sep  2 1999 Jeff Johnson <jbj@redhat.com>
 - fix broken %%postun
 
-* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com> 
+* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com>
 - auto rebuild in the new build environment (release 6)
 
 * Wed Mar 17 1999 Michael Johnson <johnsonm@redhat.com>
@@ -577,7 +577,7 @@ fi
 - added slib link
 
 * Thu Sep 18 1997 Tomasz Koczko <kloczek@idk.com.pl>          (1.2-3)
-- added %%attr(-, root, root) for %%doc, 
+- added %%attr(-, root, root) for %%doc,
 - in %%post, %%postun ldconfig runed as parameter "-p",
 - removed /bin/sh from requires,
 - added %%description,
