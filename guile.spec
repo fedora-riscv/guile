@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
-Version: 2.0.7
+Version: 2.0.9
 Release: 1%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
@@ -172,6 +172,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Apr 10 2013 Jan Synáček <jsynacek@redhat.com> - 2.0.9-1
+- Update to 2.0.9 (#950357, #925529)
+
 * Fri Jan 25 2013 Jan Synáček <jsynacek@redhat.com> - 2.0.7-1
 - Add forgotten sources
 
