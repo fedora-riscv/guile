@@ -106,8 +106,18 @@ if [ "$1" = 0 ]; then
             %{_infodir}/dir &> /dev/null
     done
 fi
-rm -f %{_bindir}/guile
-rm -f %{_bindir}/guile-tools
+:
+
+%triggerin -- guile < 5:2.0.9-3
+# Allow safe upgrade from older versions
+ln -f %{_bindir}/guile{,.save}
+ln -f %{_bindir}/guile-tools{,.save}
+:
+
+%posttrans
+# Move saved files back
+[ -e %{_bindir}/guile.save ] && mv -f %{_bindir}/guile{.save,}
+[ -e %{_bindir}/guile-tools.save ] && mv -f %{_bindir}/guile-tools{.save,}
 :
 
 %triggerin -- slib
