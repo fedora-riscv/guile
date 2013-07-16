@@ -121,9 +121,6 @@ ln -f %{_bindir}/guile-tools{,.save}
 :
 
 %triggerin -- slib
-# Remove files created in guile < 1.8.3-2
-rm -f %{_datadir}/guile/site/slib{,cat}
-
 ln -sfT ../../slib %{_datadir}/guile/%{mver}/slib
 rm -f %{_datadir}/guile/%{mver}/slibcat
 export SCHEME_LIBRARY_PATH=%{_datadir}/slib/
