@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
@@ -174,6 +174,13 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue Jul 16 2013 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.9-3
+- drop renaming to guile2
+- fix multilib conflicts
+- fix post scriptlet to not remove files on upgrade
+- remove obsolete code from slib trigger
+- fix weekdays in changelog
+
 * Tue Jul 09 2013 Karsten Hopp <karsten@redhat.com> 2.0.9-2
 - bump release and rebuild to fix dependencies on PPC
 
