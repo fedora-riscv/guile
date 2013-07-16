@@ -72,29 +72,18 @@ done
 touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
 ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
 
-# Necessary guile 2 renaming
-# rename binaries
-mv $RPM_BUILD_ROOT%{_bindir}/guile{,2}
-mv $RPM_BUILD_ROOT%{_bindir}/guile{,2}-tools
-# rename man and info pages
-mv $RPM_BUILD_ROOT%{_mandir}/man1/guile{,2}.1
-infopath=$RPM_BUILD_ROOT%{_infodir}
-sed -i -e 's/guile\.info/guile2\.info/' ${infopath}/guile.info
-for i in ${infopath}/guile*; do
-	newname=$(echo ${i} | sed -e 's/guile\./guile2\./')
-	mv ${i} ${newname}
-done
-mv $RPM_BUILD_ROOT%{_infodir}/r5rs{,2}.info
+# Create symlinks for compatibility
+ln -s guile $RPM_BUILD_ROOT%{_bindir}/guile2
+ln -s guile-tools $RPM_BUILD_ROOT%{_bindir}/guile2-tools
+
 %check
 make %{?_smp_mflags} check
 
 %post
 /sbin/ldconfig
 for i in guile r5rs; do
-    /sbin/install-info %{_infodir}/${i}2.info.gz %{_infodir}/dir &> /dev/null
+    /sbin/install-info %{_infodir}/${i}.info.gz %{_infodir}/dir &> /dev/null
 done
-ln -fs %{_bindir}/guile2 %{_bindir}/guile
-ln -fs %{_bindir}/guile2-tools %{_bindir}/guile-tools
 :
 
 %postun -p /sbin/ldconfig
@@ -102,6 +91,9 @@ ln -fs %{_bindir}/guile2-tools %{_bindir}/guile-tools
 %preun
 if [ "$1" = 0 ]; then
     for i in guile r5rs; do
+        /sbin/install-info --delete %{_infodir}/${i}.info.gz \
+            %{_infodir}/dir &> /dev/null
+        # Remove entries created by packages before 2.0.9-3
         /sbin/install-info --delete %{_infodir}/${i}2.info.gz \
             %{_infodir}/dir &> /dev/null
     done
@@ -147,8 +139,8 @@ fi
 %{_bindir}/guile2
 %{_bindir}/guile2-tools
 %{_bindir}/guild
-%ghost %{_bindir}/guile
-%ghost %{_bindir}/guile-tools
+%{_bindir}/guile
+%{_bindir}/guile-tools
 %{_libdir}/libguile*.so.*
 %{_libdir}/libguilereadline-*.so
 %{_libdir}/guile
@@ -171,7 +163,7 @@ fi
 %dir %{_datadir}/guile/site
 %dir %{_datadir}/guile/site/%{mver}
 %{_infodir}/*
-%{_mandir}/man1/guile2.1*
+%{_mandir}/man1/guile.1*
 
 %files devel
 %{_bindir}/guile-config
