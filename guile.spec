@@ -487,7 +487,7 @@ fi
 * Wed Aug 22 2001 Philipp Knirsch <pknirsch@redhat.de> 1.3.4-15/2
 - Fixed /tmp buildroot pollution (#50398)
 
-* Mon Jun 12 2001 Florian La Roche <Florian.LaRoche@redhat.de> 1.3.4-14/1
+* Tue Jun 12 2001 Florian La Roche <Florian.LaRoche@redhat.de> 1.3.4-14/1
 - size_t patch from <oliver.paukstadt@millenux.com>
 
 * Fri May 11 2001 Bernhard Rosenkraenzer <bero@redhat.com> 1.3.4-13/1
