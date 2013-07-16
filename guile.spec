@@ -14,6 +14,8 @@ Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Requires: coreutils
 
+Patch1: guile-multilib.patch
+
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
 implementation of the Scheme programming language, written in C.  GUILE
@@ -40,6 +42,7 @@ install the guile package.
 
 %prep
 %setup -q -n guile-%version
+%patch1 -p1 -b .multilib
 
 %build
 
