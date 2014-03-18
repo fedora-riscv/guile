@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
-Version: 2.0.9
+Version: 2.0.10
 Release: 4%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
@@ -61,6 +61,9 @@ mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site/%{mver}
 
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*.la
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+
+# Our gdb doesn't support guile yet
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/libguile*gdb.scm
 
 # Compress large documentation
 bzip2 NEWS
