@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.10
-Release: 4%{?dist}
+Release: 1%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
@@ -168,6 +168,11 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Mar 19 2014 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.10-1
+- update to 2.0.10
+- update slibcat building for slib 3b4
+- disable auto-compilation when building slibcat
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:2.0.9-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
