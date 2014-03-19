@@ -72,8 +72,7 @@ for i in $RPM_BUILD_ROOT%{_infodir}/goops.info; do
     iconv -f iso8859-1 -t utf-8 < $i > $i.utf8 && mv -f ${i}{.utf8,}
 done
 
-touch $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slibcat
-ln -s ../../slib $RPM_BUILD_ROOT%{_datadir}/guile/%{mver}/slib
+touch $RPM_BUILD_ROOT%{_datadir}/guile/site/%{mver}/slibcat
 
 # Create symlinks for compatibility
 ln -s guile $RPM_BUILD_ROOT%{_bindir}/guile2
@@ -115,26 +114,19 @@ ln -f %{_bindir}/guile-tools{,.save}
 [ -e %{_bindir}/guile-tools.save ] && mv -f %{_bindir}/guile-tools{.save,}
 :
 
-%triggerin -- slib
-ln -sfT ../../slib %{_datadir}/guile/%{mver}/slib
-rm -f %{_datadir}/guile/%{mver}/slibcat
+%triggerin -- slib >= 3b4-1
+rm -f %{_datadir}/guile/site/%{mver}/slibcat
 export SCHEME_LIBRARY_PATH=%{_datadir}/slib/
 
 # Build SLIB catalog
-for pre in \
-    "(use-modules (ice-9 slib))" \
-    "(load \"%{_datadir}/slib/guile.init\")"
-do
-    %{_bindir}/guile --fresh-auto-compile --no-auto-compile -c "$pre
-        (set! implementation-vicinity (lambda () \"%{_datadir}/guile/%{mver}/\"))
-        (require 'new-catalog)" &> /dev/null && break
-    rm -f %{_datadir}/guile/%{mver}/slibcat
-done
+%{_bindir}/guile --fresh-auto-compile --no-auto-compile -c \
+    "(use-modules (ice-9 slib)) (require 'new-catalog)" &> /dev/null || \
+    rm -f %{_datadir}/guile/site/%{mver}/slibcat
 :
 
-%triggerun -- slib
+%triggerun -- slib >= 3b4-1
 if [ "$2" = 0 ]; then
-    rm -f %{_datadir}/guile/%{mver}/slib{,cat}
+    rm -f %{_datadir}/guile/site/%{mver}/slibcat
 fi
 
 %files
@@ -161,10 +153,9 @@ fi
 %{_datadir}/guile/%{mver}/web
 %{_datadir}/guile/%{mver}/guile-procedures.txt
 %{_datadir}/guile/%{mver}/*.scm
-%ghost %{_datadir}/guile/%{mver}/slibcat
-%ghost %{_datadir}/guile/%{mver}/slib
 %dir %{_datadir}/guile/site
 %dir %{_datadir}/guile/site/%{mver}
+%ghost %{_datadir}/guile/site/%{mver}/slibcat
 %{_infodir}/*
 %{_mandir}/man1/guile.1*
 
