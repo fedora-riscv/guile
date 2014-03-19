@@ -125,7 +125,7 @@ for pre in \
     "(use-modules (ice-9 slib))" \
     "(load \"%{_datadir}/slib/guile.init\")"
 do
-    %{_bindir}/guile -c "$pre
+    %{_bindir}/guile --fresh-auto-compile --no-auto-compile -c "$pre
         (set! implementation-vicinity (lambda () \"%{_datadir}/guile/%{mver}/\"))
         (require 'new-catalog)" &> /dev/null && break
     rm -f %{_datadir}/guile/%{mver}/slibcat
