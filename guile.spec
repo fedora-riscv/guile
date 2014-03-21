@@ -168,6 +168,10 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Fri Mar 21 2014 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.11-1
+- update to 2.0.11
+- switch to xz source tarball
+
 * Wed Mar 19 2014 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.10-1
 - update to 2.0.10
 - update slibcat building for slib 3b4
