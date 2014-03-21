@@ -4,7 +4,7 @@ Name: guile
 Version: 2.0.10
 Release: 1%{?dist}
 Epoch: 5
-Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
+Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
 License: LGPLv3+
 Group: Development/Languages
