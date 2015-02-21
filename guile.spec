@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.11
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -168,6 +168,10 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 5:2.0.11-5
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
 * Tue Sep 02 2014 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.11-4
 - rebuild for new libunistring
 
