@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.11
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -77,6 +77,17 @@ touch $RPM_BUILD_ROOT%{_datadir}/guile/site/%{mver}/slibcat
 # Create symlinks for compatibility
 ln -s guile $RPM_BUILD_ROOT%{_bindir}/guile2
 ln -s guile-tools $RPM_BUILD_ROOT%{_bindir}/guile2-tools
+
+# Adjust mtimes so they are all identical on all architectures.
+# When guile.x86_64 and guile.i686 are installed at the same time on an x86_64 system,
+# the *.scm files' timestamps change, as they normally reside in /usr/share/guile/.
+# Their corresponding compiled *.go file go to /usr/lib64/, or /usr/lib/, depending on the arch.
+# The mismatch in timestamps between *.scm and *.go files makes guile to compile itself
+# everytime it's run. The following code adjusts the files so that their timestamps are the same
+# for every file, but unique between builds.
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1208760.
+find $RPM_BUILD_ROOT%{_datadir} -name '*.scm' -exec touch -r "%{_specdir}/guile.spec" '{}' \;
+find $RPM_BUILD_ROOT%{_libdir} -name '*.go' -exec touch -r "%{_specdir}/guile.spec" '{}' \;
 
 %check
 make %{?_smp_mflags} check
@@ -168,6 +179,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Thu Nov 12 2015 Jan Synáček <jsynacek@redhat.com> - 5:2.0.11-7
+- unify mtime on *.scm and *.go files (#1208760)
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:2.0.11-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
