@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.11
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -179,6 +179,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.11-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Thu Nov 12 2015 Jan Synáček <jsynacek@redhat.com> - 5:2.0.11-7
 - unify mtime on *.scm and *.go files (#1208760)
 
