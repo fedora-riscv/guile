@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.11
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -141,7 +141,7 @@ if [ "$2" = 0 ]; then
 fi
 
 %files
-%doc AUTHORS COPYING* ChangeLog HACKING NEWS.bz2 README THANKS
+%doc AUTHORS COPYING* HACKING NEWS.bz2 README THANKS
 %{_bindir}/guile2
 %{_bindir}/guile2-tools
 %{_bindir}/guild
@@ -179,6 +179,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Sat Mar  5 2016 Peter Robinson <pbrobinson@fedoraproject.org> 5:2.0.11-9
+- Don't ship ChangeLog, NEWS suffices
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.11-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
