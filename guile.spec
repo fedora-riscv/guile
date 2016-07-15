@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.12
-Release: 9%{?dist}
+Release: 1%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -179,6 +179,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Fri Jul 15 2016 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.12-1
+- update to 2.0.12
+
 * Sat Mar  5 2016 Peter Robinson <pbrobinson@fedoraproject.org> 5:2.0.11-9
 - Don't ship ChangeLog, NEWS suffices
 
