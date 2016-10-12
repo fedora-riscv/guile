@@ -179,6 +179,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Oct 12 2016 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.13-1
+- update to 2.0.13 (CVE-2016-8605, CVE-2016-8606)
+
 * Fri Jul 15 2016 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.12-1
 - update to 2.0.12
 
