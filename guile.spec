@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.13
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -141,7 +141,8 @@ if [ "$2" = 0 ]; then
 fi
 
 %files
-%doc AUTHORS COPYING* HACKING NEWS.bz2 README THANKS
+%license COPYING COPYING.LESSER LICENSE
+%doc AUTHORS HACKING NEWS.bz2 README THANKS
 %{_bindir}/guile2
 %{_bindir}/guile2-tools
 %{_bindir}/guild
@@ -179,6 +180,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Feb 01 2017 Stephen Gallagher <sgallagh@redhat.com> - 2.0.13-3
+- Add missing %%license macro
+
 * Thu Jan 12 2017 Igor Gnatenko <ignatenko@redhat.com> - 5:2.0.13-2
 - Rebuild for readline 7.x
 
