@@ -15,6 +15,7 @@ Requires(preun): /sbin/install-info
 Requires: coreutils
 
 Patch1: guile-multilib.patch
+Patch2: guile-repltest.patch
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -43,6 +44,7 @@ install the guile package.
 %prep
 %setup -q -n guile-%version
 %patch1 -p1 -b .multilib
+%patch2 -p1 -b .repltest
 
 %build
 
