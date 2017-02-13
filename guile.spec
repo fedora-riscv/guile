@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.13
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -182,6 +182,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Mon Feb 13 2017 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.13-4
+- fix race condition in 00-repl-server.test (#1412931)
+
 * Wed Feb 01 2017 Stephen Gallagher <sgallagh@redhat.com> - 2.0.13-3
 - Add missing %%license macro
 
