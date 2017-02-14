@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
-Version: 2.0.13
+Version: 2.0.14
 Release: 4%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
@@ -15,7 +15,6 @@ Requires(preun): /sbin/install-info
 Requires: coreutils
 
 Patch1: guile-multilib.patch
-Patch2: guile-repltest.patch
 Patch3: guile-threadstest.patch
 
 %description
@@ -45,7 +44,6 @@ install the guile package.
 %prep
 %setup -q -n guile-%version
 %patch1 -p1 -b .multilib
-%patch2 -p1 -b .repltest
 %patch3 -p1 -b .threadstest
 
 %build
