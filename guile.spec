@@ -16,6 +16,7 @@ Requires: coreutils
 
 Patch1: guile-multilib.patch
 Patch2: guile-repltest.patch
+Patch3: guile-threadstest.patch
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -45,6 +46,7 @@ install the guile package.
 %setup -q -n guile-%version
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .repltest
+%patch3 -p1 -b .threadstest
 
 %build
 
