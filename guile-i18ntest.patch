@@ -1,0 +1,62 @@
+diff -up guile-2.0.14/test-suite/tests/i18n.test.i18ntest guile-2.0.14/test-suite/tests/i18n.test
+--- guile-2.0.14/test-suite/tests/i18n.test.i18ntest	2017-02-13 21:32:39.000000000 +0100
++++ guile-2.0.14/test-suite/tests/i18n.test	2017-10-10 13:25:47.492589702 +0200
+@@ -527,28 +527,28 @@
+   (with-test-prefix "French"
+ 
+     (pass-if-equal "integer"
+-        "123 456"
++        "123\xa0456"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))
+            (number->locale-string 123456 #t fr)))))
+ 
+     (pass-if-equal "negative integer"
+-        "-1 234 567"
++        "-1\xa0234\xa0567"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))
+            (number->locale-string -1234567 #t fr)))))
+ 
+     (pass-if-equal "fraction"
+-        "1 234,567"
++        "1\xa0234,567"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))
+            (number->locale-string 1234.567 #t fr)))))
+ 
+     (pass-if-equal "fraction, 1 digit"
+-        "1 234,6"
++        "1\xa0234,6"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))
+@@ -563,7 +563,7 @@
+   (with-test-prefix "French"
+ 
+     (pass-if-equal "12345.678"
+-        "12 345,678"
++        "12\xa0345,678"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (if (null? (locale-digit-grouping %french-locale))
+@@ -586,14 +586,14 @@
+   (with-test-prefix "French"
+ 
+     (pass-if-equal "integer"
+-        "123 456,00 +EUR"
++        "123\xa0456,00 +EUR"
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))
+            (monetary-amount->locale-string 123456 #f fr)))))
+ 
+     (pass-if-equal "fraction"
+-        "1 234,57 EUR "
++        "1\xa0234,57 EUR "
+       (under-french-locale-or-unresolved
+        (lambda ()
+          (let ((fr (make-locale LC_ALL %french-locale-name)))

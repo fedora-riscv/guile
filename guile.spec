@@ -15,6 +15,7 @@ Requires(preun): /sbin/install-info
 Requires: coreutils
 
 Patch1: guile-multilib.patch
+Patch2: guile-i18ntest.patch
 Patch3: guile-threadstest.patch
 
 %description
@@ -44,6 +45,7 @@ install the guile package.
 %prep
 %setup -q -n guile-%version
 %patch1 -p1 -b .multilib
+%patch2 -p1 -b .i18ntest
 %patch3 -p1 -b .threadstest
 
 %build
