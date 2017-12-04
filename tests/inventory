@@ -1,0 +1,4 @@
+#!/bin/bash
+#upstream test needs tty
+export TEST_DOCKER_EXTRA_ARGS="-v /dev:/dev --privileged"
+exec merge-standard-inventory "$@"

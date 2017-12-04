@@ -1,0 +1,5 @@
+PURPOSE of /CoreOS/guile/Sanity/smoke
+Description: Guile smoke test
+Author: Petr Splichal <psplicha@redhat.com>
+
+Smoke test for the Guile interpreter.

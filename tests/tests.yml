@@ -1,0 +1,25 @@
+---
+# Tests to run in a classic and container environments
+- hosts: localhost
+  roles:
+  - role: standard-test-beakerlib
+    tags:
+    - classic
+    - container
+    tests:
+    - smoke
+    - upstream
+    required_packages:
+    - guile
+    - findutils             # beakerlib needs find command
+    - gettext-devel         # upstream needs it
+    - gmp-devel             # upstream needs it
+    - libtool               # upstream needs it
+    - libtool-ltdl-devel    # upstream needs it
+    - readline-devel        # upstream needs it
+    - rpm-build             # upstream needs it
+    - libunistring-devel    # upstream needs it
+    - libffi-devel          # upstream needs it
+    - gc-devel              # upstream needs it
+    - wget                  # rlFetchSrcForInstalled needs it
+
