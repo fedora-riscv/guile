@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -98,7 +98,7 @@ find $RPM_BUILD_ROOT%{_datadir} -name '*.scm' -exec touch -r "%{_specdir}/guile.
 find $RPM_BUILD_ROOT%{_libdir} -name '*.go' -exec touch -r "%{_specdir}/guile.spec" '{}' \;
 
 %check
-make %{?_smp_mflags} check ||:
+make %{?_smp_mflags} check
 
 %post
 /sbin/ldconfig
@@ -188,6 +188,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue Feb 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 5:2.0.14-8
+- %%check: restore
+
 * Tue Feb 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 5:2.0.14-7
 - avoid linking all guile-devel consumers to libgc
 - BR: gcc
