@@ -1,0 +1,15 @@
+diff -up guile-2.0.14/meta/guile-2.0.pc.in.pkgconfig_private guile-2.0.14/meta/guile-2.0.pc.in
+--- guile-2.0.14/meta/guile-2.0.pc.in.pkgconfig_private	2016-12-14 18:03:33.000000000 -0600
++++ guile-2.0.14/meta/guile-2.0.pc.in	2018-02-20 11:53:56.344379283 -0600
+@@ -21,9 +21,9 @@ guile=${bindir}/@guile@
+ Name: GNU Guile
+ Description: GNU's Ubiquitous Intelligent Language for Extension
+ Version: @GUILE_VERSION@
+-Libs: -L${libdir} -lguile-@GUILE_EFFECTIVE_VERSION@ @BDW_GC_LIBS@
++Libs: -L${libdir} -lguile-@GUILE_EFFECTIVE_VERSION@
+ Libs.private: @LIB_CLOCK_GETTIME@ @LIBGMP@ @LIBLTDL@ @LIBFFI_LIBS@	\
+   @LIBUNISTRING@ @GUILE_LIBS@ @LIBICONV@ @LIBINTL@ @LIBSOCKET@		\
+   @SERVENT_LIB@ @HOSTENT_LIB@ @GETADDRINFO_LIB@ @INET_NTOP_LIB@		\
+-  @INET_PTON_LIB@
++  @INET_PTON_LIB@ @BDW_GC_LIBS@
+ Cflags: -I${pkgincludedir}/@GUILE_EFFECTIVE_VERSION@ @GUILE_CFLAGS@ @BDW_GC_CFLAGS@

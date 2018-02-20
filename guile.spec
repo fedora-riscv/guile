@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -17,6 +17,9 @@ Requires: coreutils
 Patch1: guile-multilib.patch
 Patch2: guile-i18ntest.patch
 Patch3: guile-threadstest.patch
+# Avoid linking all guile consumers to libgc
+# TODO: consider using: Requires.private: bdw-gc
+Patch4: guile-2.0.14-gc_pkgconfig_private.patch
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -47,6 +50,7 @@ install the guile package.
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .i18ntest
 %patch3 -p1 -b .threadstest
+%patch4 -p1 -b .gc_pkgconfig_private
 
 %build
 
@@ -56,10 +60,10 @@ install the guile package.
 sed -i 's|" $sys_lib_dlsearch_path "|" $sys_lib_dlsearch_path %{_libdir} "|' \
     libtool
 
-make %{?_smp_mflags}
+%{make_build}
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+%{make_install}
 
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/guile/site/%{mver}
 
@@ -184,6 +188,11 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue Feb 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 5:2.0.14-7
+- avoid linking all guile-devel consumers to libgc
+- BR: gcc
+- use %%{make_build},%%{make_install}
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
