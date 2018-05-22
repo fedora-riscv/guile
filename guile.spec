@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -188,6 +188,10 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue May 22 2018 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.14-9
+- use macros for ldconfig scriptlets
+- add gcc to build requirements
+
 * Tue Feb 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 5:2.0.14-8
 - %%check: restore
 
