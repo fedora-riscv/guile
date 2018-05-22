@@ -101,13 +101,13 @@ find $RPM_BUILD_ROOT%{_libdir} -name '*.go' -exec touch -r "%{_specdir}/guile.sp
 make %{?_smp_mflags} check
 
 %post
-/sbin/ldconfig
+%?ldconfig
 for i in guile r5rs; do
     /sbin/install-info %{_infodir}/${i}.info.gz %{_infodir}/dir &> /dev/null
 done
 :
 
-%postun -p /sbin/ldconfig
+%ldconfig_postun
 
 %preun
 if [ "$1" = 0 ]; then
