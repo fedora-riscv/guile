@@ -8,7 +8,7 @@ Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
 License: LGPLv3+
 Group: Development/Languages
-BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
+BuildRequires: gcc libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel libunistring-devel libffi-devel gc-devel
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
