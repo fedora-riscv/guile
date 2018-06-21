@@ -114,23 +114,8 @@ if [ "$1" = 0 ]; then
     for i in guile r5rs; do
         /sbin/install-info --delete %{_infodir}/${i}.info.gz \
             %{_infodir}/dir &> /dev/null
-        # Remove entries created by packages before 2.0.9-3
-        /sbin/install-info --delete %{_infodir}/${i}2.info.gz \
-            %{_infodir}/dir &> /dev/null
     done
 fi
-:
-
-%triggerin -- guile < 5:2.0.9-3
-# Allow safe upgrade from older versions
-ln -f %{_bindir}/guile{,.save}
-ln -f %{_bindir}/guile-tools{,.save}
-:
-
-%posttrans
-# Move saved files back
-[ -e %{_bindir}/guile.save ] && mv -f %{_bindir}/guile{.save,}
-[ -e %{_bindir}/guile-tools.save ] && mv -f %{_bindir}/guile-tools{.save,}
 :
 
 %triggerin -- slib >= 3b4-1
