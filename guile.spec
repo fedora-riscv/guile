@@ -10,8 +10,6 @@ License: LGPLv3+
 Group: Development/Languages
 BuildRequires: gcc libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel libunistring-devel libffi-devel gc-devel
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
 Requires: coreutils
 
 Patch1: guile-multilib.patch
@@ -100,23 +98,7 @@ find $RPM_BUILD_ROOT%{_libdir} -name '*.go' -exec touch -r "%{_specdir}/guile.sp
 %check
 make %{?_smp_mflags} check
 
-%post
-%?ldconfig
-for i in guile r5rs; do
-    /sbin/install-info %{_infodir}/${i}.info.gz %{_infodir}/dir &> /dev/null
-done
-:
-
-%ldconfig_postun
-
-%preun
-if [ "$1" = 0 ]; then
-    for i in guile r5rs; do
-        /sbin/install-info --delete %{_infodir}/${i}.info.gz \
-            %{_infodir}/dir &> /dev/null
-    done
-fi
-:
+%ldconfig_scriptlets
 
 %triggerin -- slib >= 3b4-1
 rm -f %{_datadir}/guile/site/%{mver}/slibcat
