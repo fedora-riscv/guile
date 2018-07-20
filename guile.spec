@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 11%{?dist}
+Release: 12%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -159,6 +159,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Fri Jul 20 2018 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.14-12
+- disable failing floating-point test on ppc64le (#1604296)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
