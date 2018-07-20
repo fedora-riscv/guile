@@ -18,6 +18,7 @@ Patch3: guile-threadstest.patch
 # Avoid linking all guile consumers to libgc
 # TODO: consider using: Requires.private: bdw-gc
 Patch4: guile-2.0.14-gc_pkgconfig_private.patch
+Patch5: guile-ieeetest.patch
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -49,6 +50,9 @@ install the guile package.
 %patch2 -p1 -b .i18ntest
 %patch3 -p1 -b .threadstest
 %patch4 -p1 -b .gc_pkgconfig_private
+%ifarch ppc64le
+%patch5 -p1 -b .ieeetest
+%endif
 
 %build
 
