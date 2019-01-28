@@ -7,7 +7,6 @@ Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
 License: LGPLv3+
-Group: Development/Languages
 BuildRequires: gcc libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel libunistring-devel libffi-devel gc-devel
 Requires: coreutils
@@ -31,7 +30,6 @@ that you are developing.
 
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library
-Group: Development/Libraries
 Requires: guile%{?_isa} = %{epoch}:%{version}-%{release} gmp-devel gc-devel
 Requires: pkgconfig
 
