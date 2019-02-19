@@ -54,6 +54,12 @@ install the guile package.
 
 %build
 
+# The -O2 option in CFLAGS seems to cause the build to fail on
+# some archs (bug #1675089)
+%ifarch armv7hl ppc64le
+export CFLAGS="$(echo $RPM_OPT_FLAGS | sed 's/-O2/-Os/')"
+%endif
+
 %configure --disable-static --disable-error-on-warning
 
 # Remove RPATH
