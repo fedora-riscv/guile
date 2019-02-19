@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 15%{?dist}
+Release: 16%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -163,6 +163,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue Feb 19 2019 Miroslav Lichvar <mlichvar@redhat.com> - 5:2.0.14-16
+- adjust CFLAGS on armv7hl and ppc64le to fix building (#1675089)
+
 * Sun Feb 17 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 5:2.0.14-15
 - Rebuild for readline 8.0
 
