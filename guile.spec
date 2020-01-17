@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 17%{?dist}
+Release: 18%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -18,6 +18,7 @@ Patch3: guile-threadstest.patch
 # TODO: consider using: Requires.private: bdw-gc
 Patch4: guile-2.0.14-gc_pkgconfig_private.patch
 Patch5: guile-ieeetest.patch
+Patch6: guile-configure.patch
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -51,8 +52,10 @@ install the guile package.
 %ifarch ppc64le
 %patch5 -p1 -b .ieeetest
 %endif
+%patch6 -p1 -b .configure
 
 %build
+autoreconf -fiv
 
 # The -O2 option in CFLAGS seems to cause the build to fail on
 # some archs (bug #1675089)
@@ -163,6 +166,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Fri Jan 17 2020 Jeff Law <law@redhat.com> - 5:2.0.14-18
+- Fix configure tests compromised by LTO
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
