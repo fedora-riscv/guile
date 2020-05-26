@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 19%{?dist}
+Release: 20%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -93,6 +93,7 @@ touch $RPM_BUILD_ROOT%{_datadir}/guile/site/%{mver}/slibcat
 
 # Create symlinks for compatibility
 ln -s guile $RPM_BUILD_ROOT%{_bindir}/guile2
+ln -s %{_mandir}/man1/guile.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/guile2.1.gz
 ln -s guile-tools $RPM_BUILD_ROOT%{_bindir}/guile2-tools
 
 # Adjust mtimes so they are all identical on all architectures.
@@ -156,6 +157,7 @@ fi
 %ghost %{_datadir}/guile/site/%{mver}/slibcat
 %{_infodir}/*
 %{_mandir}/man1/guile.1*
+%{_mandir}/man1/guile2.1*
 
 %files devel
 %{_bindir}/guile-config
@@ -166,6 +168,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Tue May 26 2020 Tomas Korbar <tkorbar@redhat.com> - 5:2.0.14-20
+- Create symlink for guile2 manpage (#1612696)
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
