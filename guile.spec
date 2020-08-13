@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 21%{?dist}
+Release: 22%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -108,7 +108,7 @@ find $RPM_BUILD_ROOT%{_datadir} -name '*.scm' -exec touch -r "%{_specdir}/guile.
 find $RPM_BUILD_ROOT%{_libdir} -name '*.go' -exec touch -r "%{_specdir}/guile.spec" '{}' \;
 
 %check
-make %{?_smp_mflags} check
+%make_build check
 
 %ldconfig_scriptlets
 
@@ -168,6 +168,10 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Thu Aug 13 2020 Tomas Korbar <tkorbar@redhat.com> - 2.0.14-22
+- Use make macros
+- https://fedoraproject.org/wiki/Changes/UseMakeBuildInstallMacro
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
