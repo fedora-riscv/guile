@@ -9,6 +9,7 @@ URL: http://www.gnu.org/software/guile/
 License: LGPLv3+
 BuildRequires: gcc libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel libunistring-devel libffi-devel gc-devel
+BuildRequires: make
 Requires: coreutils
 
 Patch1: guile-multilib.patch
