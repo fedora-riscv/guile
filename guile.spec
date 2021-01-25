@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 22%{?dist}
+Release: 23%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -169,7 +169,11 @@ fi
 %{_includedir}/guile
 
 %changelog
-* Thu Aug 13 2020 Tomas Korbar <tkorbar@redhat.com> - 2.0.14-22
+* Mon Jan 25 2021 Tomas Korbar <tkorbar@redhat.com> - 5:2.0.14-23
+- Allow guile-devel x86_64 and i686 to be installed at the same time
+- Resolves: rhbz#1915345
+
+* Thu Aug 13 2020 Tomas Korbar <tkorbar@redhat.com> - 5:2.0.14-22
 - Use make macros
 - https://fedoraproject.org/wiki/Changes/UseMakeBuildInstallMacro
 

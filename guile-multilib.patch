@@ -1,32 +1,52 @@
-diff -up guile-2.0.9/libguile/Makefile.in.multilib guile-2.0.9/libguile/Makefile.in
---- guile-2.0.9/libguile/Makefile.in.multilib	2013-04-10 01:31:59.000000000 +0200
-+++ guile-2.0.9/libguile/Makefile.in	2013-07-16 16:59:59.490527131 +0200
-@@ -3283,6 +3283,11 @@ install-nodist_modincludeHEADERS: $(nodi
- 	while read files; do \
- 	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(modincludedir)'"; \
- 	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(modincludedir)" || exit $$?; \
-+	  for f in $$files; do if [ "$$f" = "scmconfig.h" ]; then \
-+	    grep -q "SCM_SIZEOF_LONG 4" "$(DESTDIR)$(modincludedir)/$$f" && g=32 || g=64; \
-+	    mv "$(DESTDIR)$(modincludedir)/$$f" "$(DESTDIR)$(modincludedir)/scmconfig-$$g.h"; \
-+	    $(INSTALL_HEADER) "$${d}scmconfig-multilib.h" "$(DESTDIR)$(modincludedir)/$$f"; \
-+	  fi; done \
- 	done
+commit 23eafdbac3bcb1116205a9ef51f0bd301c966483
+Author: Tomas Korbar <tkorbar@redhat.com>
+Date:   Mon Jan 25 10:04:19 2021 +0100
+
+    Fix multilib
+
+diff --git a/libguile/Makefile.am b/libguile/Makefile.am
+index 74894e1..2ee2ef5 100644
+--- a/libguile/Makefile.am
++++ b/libguile/Makefile.am
+@@ -84,7 +84,10 @@ scmconfig.h: ${top_builddir}/config.h gen-scmconfig$(EXEEXT)
+ 	./gen-scmconfig$(EXEEXT) >> scmconfig.h.tmp; \
+ 	chmod 444 scmconfig.h.tmp; \
+ 	rm -f scmconfig.h; \
+-	mv scmconfig.h.tmp scmconfig.h)
++	mv scmconfig.h.tmp scmconfig.h; \
++	grep -q "SCM_SIZEOF_LONG 4" ./scmconfig.h && g=32 || g=64; \
++	mv scmconfig.h scmconfig-$$g.h;\
++	cp scmconfig-multilib.h scmconfig.h)
  
- uninstall-nodist_modincludeHEADERS:
-diff -up guile-2.0.9/libguile/scmconfig-multilib.h.multilib guile-2.0.9/libguile/scmconfig-multilib.h
---- guile-2.0.9/libguile/scmconfig-multilib.h.multilib	2013-07-16 17:02:26.045733704 +0200
-+++ guile-2.0.9/libguile/scmconfig-multilib.h	2013-07-16 17:01:51.623685971 +0200
+ 
+ guile_filter_doc_snarfage_SOURCES = c-tokenize.c
+@@ -661,7 +664,8 @@ modinclude_HEADERS =				\
+ 	vm-expand.h				\
+ 	vm.h					\
+ 	vports.h				\
+-	weaks.h
++	weaks.h					\
++	scmconfig-[0-9][0-9].h
+ 
+ nodist_modinclude_HEADERS = version.h scmconfig.h
+ 
+diff --git a/libguile/scmconfig-multilib.h b/libguile/scmconfig-multilib.h
+new file mode 100644
+index 0000000..d7f96a2
+--- /dev/null
++++ b/libguile/scmconfig-multilib.h
 @@ -0,0 +1,7 @@
 +/* multilib clean wrapper */
 +#include <bits/wordsize.h>
 +#if __WORDSIZE == 32
-+#include "libguile/scmconfig-32.h"
++#include "scmconfig-32.h"
 +#else
-+#include "libguile/scmconfig-64.h"
++#include "scmconfig-64.h"
 +#endif
-diff -up guile-2.0.9/meta/guile-config.in.multilib guile-2.0.9/meta/guile-config.in
---- guile-2.0.9/meta/guile-config.in.multilib	2012-07-02 11:28:14.000000000 +0200
-+++ guile-2.0.9/meta/guile-config.in	2013-07-16 17:09:25.650324597 +0200
+diff --git a/meta/guile-config.in b/meta/guile-config.in
+index 0226f68..5a6effc 100755
+--- a/meta/guile-config.in
++++ b/meta/guile-config.in
 @@ -1,7 +1,6 @@
  #!/bin/sh
 -PKG_CONFIG_PATH="@pkgconfigdir@:$PKG_CONFIG_PATH"
@@ -36,7 +56,7 @@ diff -up guile-2.0.9/meta/guile-config.in.multilib guile-2.0.9/meta/guile-config
  
  exec "@installed_guile@" -e main -s $0 "$@"
  !#
-@@ -31,7 +30,7 @@ exec "@installed_guile@" -e main -s $0 "
+@@ -31,7 +30,7 @@ exec "@installed_guile@" -e main -s $0 "$@"
               (ice-9 rdelim))
  
  
