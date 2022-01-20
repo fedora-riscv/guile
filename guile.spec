@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 26%{?dist}
+Release: 27%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -169,6 +169,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5:2.0.14-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Sat Jan 08 2022 Miro Hrončok <mhroncok@redhat.com> - 5:2.0.14-26
 - Rebuilt for https://fedoraproject.org/wiki/Changes/LIBFFI34
 
