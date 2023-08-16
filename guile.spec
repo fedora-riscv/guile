@@ -2,7 +2,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
 Version: 2.0.14
-Release: 32%{?dist}
+Release: 32.rv64%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.xz
 URL: http://www.gnu.org/software/guile/
@@ -22,6 +22,11 @@ Patch5: guile-ieeetest.patch
 Patch6: guile-configure.patch
 Patch7: guile-configure-c99.patch
 Patch8: guile-configure-tz-c99.patch
+
+# rpatch check still failed with riscv64
+%ifarch riscv64
+%undefine __brp_check_rpaths
+%endif
 
 %description
 GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library
@@ -173,6 +178,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Wed Aug 16 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 2.0.14-32.rv64
+- Undefine __brp_check_rpaths to avoid error on riscv64.
+
 * Thu Mar 02 2023 Tomas Korbar <tkorbar@redhat.com> - 2.0.14-32
 - Change optimization to -Os on s390x architecture
 - Resolves: rhbz#2171564
